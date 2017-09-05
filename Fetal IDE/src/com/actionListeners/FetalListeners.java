@@ -4,12 +4,10 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.text.BadLocationException;
-
 import com.menuControllers.EditMenuController;
 import com.menuControllers.ExecuteMenuController;
 import com.menuControllers.FileMenuController;
@@ -24,6 +22,7 @@ public class FetalListeners extends JFrame {
 	EditMenuController emc;
 	ExecuteMenuController xmc;
 	FetalDocumentListener fdl;
+	String openFile = null;
 
 	public FetalListeners(JFrame mainWindow, JEditTextArea mainEditor) throws HeadlessException {
 		this.mainWindow = mainWindow;
@@ -57,6 +56,7 @@ public class FetalListeners extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					fmc.openFile(mainWindow, mainEditor);
+					openFile = fmc.getLastSaveFile().getName();
 					fdl.setModified(false);
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -73,6 +73,7 @@ public class FetalListeners extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				fdl.setModified(false);
 				fmc.newFile(mainEditor);
+				openFile = null;
 			}});
 		
 	}
@@ -176,7 +177,7 @@ public class FetalListeners extends JFrame {
 					if (editText.contains("begin") && editText.contains("end")) {
 						xmc.runApp(mainEditor.getText());
 					}
-				} catch (InterruptedException e1) {
+				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 
@@ -195,7 +196,7 @@ public class FetalListeners extends JFrame {
 					try {
 						StepWindowView stepWindow = new StepWindowView(fl,mainEditor);
 						stepWindow.stepWindow();
-						xmc.stepApp(editText, stepWindow, fdl);
+						xmc.stepApp(editText, stepWindow, fdl, mainEditor, openFile);
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}

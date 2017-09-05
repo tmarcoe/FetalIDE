@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<configs>
+	<file name="purchase.trans">
+		<variables>
+			<var name="invoice" type="dao" value="com.peachy.entity.Invoice">
+				<field name="total" type="decimal" value="10000.0" />
+				<field name="shipping_cost" type="decimal" value="240.0" />
+				<field name="added_charges" type="decimal" value="0.0" />
+			</var>
+		</variables>
+		<description value="Internet Purchase" />
+	</file>
+	<file name="pettycash.trans">
+		<variables>
+			<var name="transactionAmount" type="decimal" value="1000.00" />
+		</variables>
+		<description value="Petty Cash" />
+	</file>
+	<file name="payroll.trans">
+		<variables>
+			<var name="startingPeriod" type="date" value="2017-09-01" />
+			<var name="ttGrossWage" type="decimal" value="50000.00" />
+			<var name="ttlFederalTax" type="decimal" value="1500.00" />
+			<var name="ttlSsInsurance" type="decimal" value="500.00" />
+			<var name="ttlFederalUnemployment" type="decimal" value="500.00" />
+			<var name="ttlStateTax" type="decimal" value="700.00" />
+			<var name="ttlStateUmemployment" type="decimal" value="350.00" />
+			<var name="ttlGarnishments" type="decimal" value="0.00" />
+			<var name="ttlMedical" type="decimal" value="100.00" />
+			<var name="ttlRetirement" type="decimal" value="200.00" />
+			<var name="ttlOther" type="decimal" value="0.00" />
+		</variables>
+	</file>
+</configs>
