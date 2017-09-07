@@ -10,21 +10,25 @@ import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 
 import com.actionListeners.FetalListeners;
 import com.syntaxHighlighting.JEditTextArea;
 
-public class StepWindowView extends JFrame {
+public class  StepWindowView extends JFrame {
 	private static final long serialVersionUID = 1L;
-	private JTextPane varDisplay;
-	private JTextPane outDisplay;
-	private JButton next;
-	private JButton close;
+	private volatile JTextArea varDisplay;
+	private volatile JTextArea outDisplay;
+	private volatile JButton next;
+	private volatile JButton close;
+	private JCheckBox hasTreeView;
 	private FetalListeners fl;
-	private JEditTextArea mainEditor;
+	private volatile JEditTextArea mainEditor;
 	
 	
 	
@@ -33,21 +37,26 @@ public class StepWindowView extends JFrame {
 		this.mainEditor = editor;
 	}
 	public JFrame stepWindow() {
-		JFrame stepWindow = new JFrame("Step Window");
-
+		JFrame stepWindow = this;
+		setTitle("Step Window");
 		stepWindow.setLayout(new BorderLayout());
 		Container cp = stepWindow.getContentPane();
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(16,1));
 		buttonPanel.setBackground(new Color(240,240,255));
 		buttonPanel.setPreferredSize(new Dimension(100,100));
+		buttonPanel.setBorder(BorderFactory.createTitledBorder("Dashboard"));
 		next = new JButton("Next >>");
 		fl.setNext(next, mainEditor);
 		close = new JButton("Close");
 		close.setVisible(false);
+		hasTreeView = new JCheckBox();
+		hasTreeView.setSelected(false);
+		hasTreeView.setText("Tree View");
 		fl.setCloseButton(close, stepWindow);
 		buttonPanel.add(next);
 		buttonPanel.add(close);
+		buttonPanel.add(hasTreeView);
 		cp.add(buttonPanel, BorderLayout.LINE_END);
 		varDisplay = newWindow(cp, new Dimension(700,100), BorderLayout.CENTER, "Variables");
 		outDisplay = newWindow(cp, new Dimension(800,100), BorderLayout.PAGE_END, "Output");
@@ -63,27 +72,43 @@ public class StepWindowView extends JFrame {
 		return stepWindow;
 		
 	}
-	private JTextPane newWindow(Container cp,  Dimension size, String layout, String title) {
-		JTextPane textArea = new JTextPane();
+	private JTextArea newWindow(Container cp,  Dimension size, String layout, String title) {
+
+		JTextArea textArea = new JTextArea();
+		/*
+		JScrollPane vScroll = new JScrollPane(textArea, 
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, 
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		*/
 		textArea.setPreferredSize(size);
 		textArea.setBorder(BorderFactory.createTitledBorder(title));
+		
 		cp.add(textArea, layout);
+
 		
 		return textArea;
 	}
 
-	public JTextPane getVarDisplay() {
+	public synchronized void updateVarDisplay(String text) {
+		varDisplay.setText(text);
+	}
+	
+	public synchronized JTextArea getVarDisplay() {
 		return varDisplay;
 	}
 	
-	public JTextPane getOutDisplay() {
+	public synchronized JTextArea getOutDisplay() {
 		return outDisplay;
 	}
 	
-	public JButton getClose() {
+	public synchronized JButton getClose() {
 		return close;
 	}
 
+	public JCheckBox getHasTreeView() {
+		return hasTreeView;
+	}
+	
 	private Dimension scaleScreenSize(Dimension d, double percent) {
 
 		d.height *= (percent / 100);

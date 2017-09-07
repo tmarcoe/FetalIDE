@@ -64,24 +64,24 @@ public class ScriptSetupFile extends ClassLoader {
 						Double.valueOf(el.getAttributeValue("value")));
 				break;
 			case "number":
-				trans.publish(el.getAttributeValue("name"), VariableType.DECIMAL,
+				trans.publish(el.getAttributeValue("name"), VariableType.NUMBER,
 						Long.valueOf(el.getAttributeValue("value")));
 				break;
 			case "string":
-				trans.publish(el.getAttributeValue("name"), VariableType.DECIMAL, el.getAttributeValue("value"));
+				trans.publish(el.getAttributeValue("name"), VariableType.STRING, el.getAttributeValue("value"));
 				break;
 			case "date":
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				trans.publish(el.getAttributeValue("name"), VariableType.DECIMAL,
+				trans.publish(el.getAttributeValue("name"), VariableType.DATE,
 						sdf.parse(el.getAttributeValue("value")));
 				break;
 			case "boolean":
-				trans.publish(el.getAttributeValue("name"), VariableType.DECIMAL,
+				trans.publish(el.getAttributeValue("name"), VariableType.BOOLEAN,
 						Boolean.valueOf(el.getAttributeValue("value")));
 				break;
 
 			case "object":
-				trans.publish(el.getAttributeValue("name"), VariableType.DECIMAL, load(el.getAttributeValue("value")));
+				trans.publish(el.getAttributeValue("name"), VariableType.OBJECT, load(el.getAttributeValue("value")));
 				break;
 			case "dao":
 				Object obj = load(el.getAttributeValue("value"));

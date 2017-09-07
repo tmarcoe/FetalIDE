@@ -175,7 +175,7 @@ public class FetalListeners extends JFrame {
 				try {
 					String editText = mainEditor.getText();
 					if (editText.contains("begin") && editText.contains("end")) {
-						xmc.runApp(mainEditor.getText());
+						xmc.runApp(mainEditor.getText(), openFile);
 					}
 				} catch (Exception e1) {
 					e1.printStackTrace();

@@ -276,6 +276,22 @@ public class JEditTextArea extends JComponent
 		painter.repaint();
 	}
 
+	public JScrollBar getVertical() {
+		return vertical;
+	}
+
+	public void setVertical(JScrollBar vertical) {
+		this.vertical = vertical;
+	}
+
+	public JScrollBar getHorizontal() {
+		return horizontal;
+	}
+
+	public void setHorizontal(JScrollBar horizontal) {
+		this.horizontal = horizontal;
+	}
+
 	/**
 	 * Returns the number of lines visible in this text area.
 	 */

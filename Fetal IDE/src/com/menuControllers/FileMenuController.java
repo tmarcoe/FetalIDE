@@ -58,6 +58,7 @@ public class FileMenuController extends JFrame {
 				editBuffer += line + "\n";
 			}
 			mainEditor.setText(editBuffer);
+			mainEditor.getVertical().setValue(0);
 		}
 
 	}

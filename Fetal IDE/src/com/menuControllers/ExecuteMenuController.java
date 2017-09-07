@@ -1,5 +1,6 @@
 package com.menuControllers;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -9,7 +10,7 @@ import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
 import javax.swing.JButton;
-import javax.swing.JTextPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import com.actionListeners.FetalDocumentListener;
 import com.ftl.derived.FetalParser;
@@ -31,15 +32,20 @@ public class ExecuteMenuController {
 	private JEditTextArea editor = null;
 	private FetalDocumentListener fetalListener;
 	private String openFile;
+	private static PrintStream stdOut;
 
-	public void runApp(String editText) throws Exception {
-
+	public void runApp(String editText, String openFile) throws Exception {
+		this.openFile = openFile;
+		swv = null;
+		semaphore = null;
+		
 		RunApplication ra = new RunApplication();
 		ra.run(editText, null);
 	}
 	
 	public void stepApp(String editText, StepWindowView stepWindow, FetalDocumentListener fdl, JEditTextArea mainEditor, String openFile) throws IOException {
 		editor = mainEditor;
+		editor.getVertical().setValue(0);
 		fetalListener = fdl;
 		this.openFile = openFile;
 		swv = stepWindow;
@@ -73,18 +79,21 @@ public class ExecuteMenuController {
 			trans = new TransactionService();
 			ScriptSetupFile setup = new ScriptSetupFile();
 			setup.readFile(openFile, trans);
-			
-			trans.setStep(new Step());
-			StepListener stepListner = new StepListener();
-			trans.getStep().addEventListener(stepListner);
 			trans.setSemaphore(semaphore);
+			if (semaphore != null) {
+				trans.setStep(new Step());
+				StepListener stepListner = new StepListener();
+				trans.getStep().addEventListener(stepListner);
+			}
 			trans.setDebugMode(true);
 			try {
 				trans.initTransaction("file:///home/donzalma/public_html/config/fetal.properties");
 				trans.loadRule(editText);
 				FetalParser parser = trans.getfParser();
 				TransactionContext tCtx = trans.getTransCtx();
-				trans.showGuiTree(parser, tCtx);
+				if (swv == null || swv.getHasTreeView().isSelected() == true) {
+					trans.showGuiTree(parser, tCtx);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}finally {
@@ -94,6 +103,11 @@ public class ExecuteMenuController {
 					xmNext.setVisible(false);
 					xmNext = null;
 				}
+				if (stdOut != null ) {
+					System.setOut(stdOut);
+					stdOut = null;
+				}
+					
 				if (swv != null) {
 					String txt = editor.getText();
 					editor.setText(txt);
@@ -104,20 +118,23 @@ public class ExecuteMenuController {
 		}
 
 	}
-    public static void console(final JTextPane area) throws IOException {
-        area.setContentType("text/html");
+    public static void console(final JTextArea area) throws IOException {
+        //area.setContentType("text/html");
+    	area.setForeground(Color.BLACK);
         final PipedInputStream outPipe = new PipedInputStream();
         PrintStream printStream = new PrintStream(new PipedOutputStream(outPipe), true);
-
+        
+        stdOut = System.out;
         System.setOut(printStream);
         new SwingWorker<Void, String>() {
             @SuppressWarnings("resource")
 			@Override
             protected Void doInBackground() throws Exception {
+            	String line = "";
                 Scanner s = new Scanner(outPipe);
                 while (s.hasNextLine()){
-                    String line = s.nextLine();
-                    publish(line + "\n");
+                    line = s.nextLine() + '\n';
+                    publish(line);
                 }
                 return null;
             }
@@ -125,7 +142,7 @@ public class ExecuteMenuController {
             @Override
             protected void process(List<String> chunks) {
                 for (String line : chunks){
-                    area.setText("<font size=\"3\" color=\"black\">"+line+"</font>");
+                    area.setText(line);
                 }
             }
         }.execute();

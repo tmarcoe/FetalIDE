@@ -19,7 +19,6 @@
 	</file>
 	<file name="payroll.trans">
 		<variables>
-			<var name="startingPeriod" type="date" value="2017-09-01" />
 			<var name="ttGrossWage" type="decimal" value="50000.00" />
 			<var name="ttlFederalTax" type="decimal" value="1500.00" />
 			<var name="ttlSsInsurance" type="decimal" value="500.00" />
@@ -30,6 +29,7 @@
 			<var name="ttlMedical" type="decimal" value="100.00" />
 			<var name="ttlRetirement" type="decimal" value="200.00" />
 			<var name="ttlOther" type="decimal" value="0.00" />
+			<var name="startingPeriod" type="date" value="2017-09-01" />
 		</variables>
 	</file>
 </configs>

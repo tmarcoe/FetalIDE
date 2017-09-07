@@ -612,20 +612,17 @@ public class TextAreaPainter extends JComponent implements TabExpander {
 
 	public void HighlightLine(Graphics gfx, int line, int prevLine) {
 		int height = fm.getHeight();
-		
-		int  y = height * (line - 1);
-		int  prevY  = height * (prevLine - 1);
+		int  y = textArea.lineToY(line - 1);
+		int  prevY  = textArea.lineToY(prevLine - 1);
 		y += fm.getLeading() + fm.getMaxDescent();
 		prevY += fm.getLeading() + fm.getMaxDescent();
 		int x1 = 0;
 		int x2 = getWidth();
 
-
-		
 		gfx.setColor(Color.WHITE);
-		gfx.drawRect(x1 > x2 ? x2 : x1, prevY, x1 > x2 ? (x1 - x2) : (x2 - x1), (height - 6));
+		gfx.drawRect(x1 > x2 ? x2 : x1, prevY, x1 > x2 ? (x1 - x2) : (x2 - x1), (height));
 		gfx.setColor(Color.RED);
-		gfx.drawRect(x1 > x2 ? x2 : x1, y, x1 > x2 ? (x1 - x2) : (x2 - x1), (height - 6));
+		gfx.drawRect(x1 > x2 ? x2 : x1, y, x1 > x2 ? (x1 - x2) : (x2 - x1), (height));
 
 	}
 
