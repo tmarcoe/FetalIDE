@@ -15,12 +15,11 @@ import javax.swing.SwingWorker;
 import com.actionListeners.FetalDocumentListener;
 import com.ftl.derived.FetalParser;
 import com.ftl.derived.FetalParser.TransactionContext;
-import com.ftl.events.Step;
 import com.ftl.events.StepEvent;
 import com.ftl.events.StepEventListener;
 import com.ftl.helper.Variable;
-import com.helper.TransactionService;
 import com.syntaxHighlighting.JEditTextArea;
+import com.transaction.TransactionService;
 import com.views.StepWindowView;
 import com.xml.ScriptSetupFile;
 
@@ -33,6 +32,8 @@ public class ExecuteMenuController {
 	private FetalDocumentListener fetalListener;
 	private String openFile;
 	private static PrintStream stdOut;
+	@SuppressWarnings("unused")
+	private static PrintStream stdErr;
 
 	public void runApp(String editText, String openFile) throws Exception {
 		this.openFile = openFile;
@@ -49,6 +50,8 @@ public class ExecuteMenuController {
 		fetalListener = fdl;
 		this.openFile = openFile;
 		swv = stepWindow;
+		errConsole(swv.getErrorWindow());
+
 		RunApplication ra = new RunApplication();
 		semaphore = new Semaphore(0);
 
@@ -72,22 +75,20 @@ public class ExecuteMenuController {
 		}
 	}
 
-
 	class RunApplication {
 
 		public void run(String editText, Semaphore semaphore) throws Exception {
 			trans = new TransactionService();
 			ScriptSetupFile setup = new ScriptSetupFile();
 			setup.readFile(openFile, trans);
-			trans.setSemaphore(semaphore);
+			trans.initTransaction("file:///home/donzalma/public_html/config/fetal.properties", semaphore);
+
 			if (semaphore != null) {
-				trans.setStep(new Step());
 				StepListener stepListner = new StepListener();
 				trans.getStep().addEventListener(stepListner);
 			}
 			trans.setDebugMode(true);
 			try {
-				trans.initTransaction("file:///home/donzalma/public_html/config/fetal.properties");
 				trans.loadRule(editText);
 				FetalParser parser = trans.getfParser();
 				TransactionContext tCtx = trans.getTransCtx();
@@ -99,15 +100,21 @@ public class ExecuteMenuController {
 			}finally {
 				semaphore = null;
 				trans = null;
+
 				if (xmNext != null) {
 					xmNext.setVisible(false);
 					xmNext = null;
 				}
+
 				if (stdOut != null ) {
 					System.setOut(stdOut);
 					stdOut = null;
 				}
-					
+				if (stdErr != null) {
+					System.setErr(stdErr);
+					stdErr = null;
+				}
+
 				if (swv != null) {
 					String txt = editor.getText();
 					editor.setText(txt);
@@ -117,6 +124,34 @@ public class ExecuteMenuController {
 			}
 		}
 
+	}
+	public static void errConsole(final JTextArea area) throws IOException {
+		area.setForeground(Color.RED);
+		final PipedInputStream errPipe = new PipedInputStream();
+		PrintStream printStream = new PrintStream(new PipedOutputStream(errPipe), true);
+		
+		stdErr = System.err;
+		System.setErr(printStream);
+		new SwingWorker<Void, String>() {
+			@SuppressWarnings("resource")
+			@Override
+			protected Void doInBackground() throws Exception {
+				String line = "";
+				Scanner s = new Scanner(errPipe);
+                while (s.hasNextLine()){
+                    line += s.nextLine() + '\n';
+                    publish(line);
+                }
+				return null;
+			}
+            @Override
+            protected void process(List<String> chunks) {
+                for (String line : chunks){
+                    area.setText(line);
+                }
+            }		
+		}.execute();
+		
 	}
     public static void console(final JTextArea area) throws IOException {
         //area.setContentType("text/html");

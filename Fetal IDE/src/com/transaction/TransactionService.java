@@ -1,4 +1,4 @@
-package com.helper;
+package com.transaction;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -14,6 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -114,15 +115,15 @@ public class TransactionService extends FetalTransaction {
         
        slideAction(slider, viewr);
        buttonAction(button, frame);
-       //JScrollPane scrollPane = new JScrollPane(viewr);
-       //scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-       //scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+       JScrollPane scrollPane = new JScrollPane(viewr);
+       scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+       scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         
         viewr.setScale(1);//scale a little
         sliderPanel.add(slider);
         sliderPanel.add(button);
         
-        frame.getContentPane().add(viewr, BorderLayout.CENTER);
+        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
         frame.getContentPane().add(sliderPanel, BorderLayout.PAGE_END);
        
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

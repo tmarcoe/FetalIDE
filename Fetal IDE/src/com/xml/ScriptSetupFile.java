@@ -16,14 +16,15 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 import com.ftl.helper.VariableType;
-import com.helper.TransactionService;
+import com.transaction.TransactionService;
 
 public class ScriptSetupFile extends ClassLoader {
 
 	@SuppressWarnings("unchecked")
 	public void readFile(String fileName, TransactionService trans) throws Exception {
+		if (fileName == null) return;
 		SAXBuilder builder = new SAXBuilder();
-		File xmlFile = new File("resources/config/setup.xml");
+		File xmlFile = new File("resources/config/environment.xml");
 		Document document = null;
 
 		try {
@@ -150,7 +151,13 @@ public class ScriptSetupFile extends ClassLoader {
 	}
 
 	private void loadField(Object obj, String fieldName, String type, String value) throws ParseException {
-		fieldName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+		String fChar;
+		if (isUpper(fieldName.substring(0, 1))) {
+			fChar = fieldName.substring(0, 1).toLowerCase();
+		}else {
+			fChar = fieldName.substring(0, 1).toUpperCase();
+		}
+		fieldName = "set" + fChar + fieldName.substring(1);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		switch (type) {
@@ -176,7 +183,11 @@ public class ScriptSetupFile extends ClassLoader {
 		}
 
 	}
-
+	private boolean isUpper(String ch) {
+		boolean result = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".contains(ch.substring(0, 1));
+		
+		return result;
+	}
 	public Object setField(Object obj, String method, Object... args) {
 		Object o = null;
 		Class<?>[] cls = null;

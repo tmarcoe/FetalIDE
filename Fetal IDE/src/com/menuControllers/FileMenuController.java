@@ -7,19 +7,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.syntaxHighlighting.JEditTextArea;
+import com.utils.PropertiesFile;
 
 public class FileMenuController extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private File lastDir = null;
 	private File lastSaveFile = null;
-
+	private final String propFile = "resources/config/ide.properties";
 	public File getLastSaveFile() {
 		return lastSaveFile;
 	}
@@ -39,9 +41,15 @@ public class FileMenuController extends JFrame {
 
 	public void openFile(JFrame mainWindow, JEditTextArea mainEditor) throws IOException {
 		JFileChooser fc = new JFileChooser();
-
-		if (lastDir != null)
+		Properties prop = PropertiesFile.getProperties(propFile);
+		String workspace = prop.getProperty("workspace");
+	
+		if (lastDir != null) {
 			fc.setCurrentDirectory(lastDir);
+		}else {
+			if (workspace != null)
+				fc.setCurrentDirectory(new File(workspace));
+		}
 
 		int result = fc.showOpenDialog(mainWindow);
 

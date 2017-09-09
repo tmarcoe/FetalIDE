@@ -22,6 +22,7 @@ public class FetalListeners extends JFrame {
 	EditMenuController emc;
 	ExecuteMenuController xmc;
 	FetalDocumentListener fdl;
+	StepWindowView swv = null;
 	String openFile = null;
 
 	public FetalListeners(JFrame mainWindow, JEditTextArea mainEditor) throws HeadlessException {
@@ -195,6 +196,7 @@ public class FetalListeners extends JFrame {
 				if (editText.contains("begin") && editText.contains("end")) {
 					try {
 						StepWindowView stepWindow = new StepWindowView(fl,mainEditor);
+						swv = stepWindow;
 						stepWindow.stepWindow();
 						xmc.stepApp(editText, stepWindow, fdl, mainEditor, openFile);
 					} catch (IOException e1) {
@@ -217,7 +219,11 @@ public class FetalListeners extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (swv != null) {
+					swv.getView().dispose();
+				}
 				stepWindow.dispose();
+				swv = null;
 			}});
 	}
 

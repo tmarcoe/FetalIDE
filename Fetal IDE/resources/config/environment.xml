@@ -32,4 +32,33 @@
 			<var name="startingPeriod" type="date" value="2017-09-01" />
 		</variables>
 	</file>
+	<file name="inventory.trans">
+		<variables>
+			<var name="order" type="dao" value="com.peachy.entity.PurchaseOrder">
+				<field name="price" type="decimal" value="10000.00" />
+				<field name="tax" type="decimal" value="100" />
+			</var>
+		</variables>
+		<description value="Purchase Invetory" />
+	</file>
+	<file name="adjustment.trans">
+		<variables>
+			<var name="adjustment" type="decimal" value="1000.00" />
+		</variables>
+		<description value="Adjustment" />
+	</file>
+	<file name="payment.trans">
+		<variables>
+			<var name="employee" type="dao" value="com.peachy.entity.Employee">
+				<field name="FTaxPrcnt" type="decimal" value="35.0" />
+				<field name="STaxPrcnt" type="decimal" value="0.0" />
+				<field name="FUnPrcnt" type="decimal" value="0.0" />
+				<field name="SUnPrcnt" type="decimal" value="0.0" />
+				<field name="medPrcnt" type="decimal" value="0.0" />
+				<field name="ssiPrcnt" type="decimal" value="0.0" />
+				<field name="retirePrcnt" type="decimal" value="20.00" />
+			</var>
+			<var name="grossWage" type="decimal" value="100000.00"/>
+		</variables>
+	</file>
 </configs>

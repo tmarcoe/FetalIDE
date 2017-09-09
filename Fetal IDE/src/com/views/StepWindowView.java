@@ -13,22 +13,20 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
-
 import com.actionListeners.FetalListeners;
 import com.syntaxHighlighting.JEditTextArea;
 
 public class  StepWindowView extends JFrame {
 	private static final long serialVersionUID = 1L;
-	private volatile JTextArea varDisplay;
-	private volatile JTextArea outDisplay;
-	private volatile JButton next;
-	private volatile JButton close;
+	private JTextArea varDisplay;
+	private JTextArea outDisplay;
+	private JButton next;
+	private JButton close;
 	private JCheckBox hasTreeView;
 	private FetalListeners fl;
-	private volatile JEditTextArea mainEditor;
+	private JEditTextArea mainEditor;
+	private ErrorWindowView ewv;
 	
 	
 	
@@ -39,6 +37,7 @@ public class  StepWindowView extends JFrame {
 	public JFrame stepWindow() {
 		JFrame stepWindow = this;
 		setTitle("Step Window");
+
 		stepWindow.setLayout(new BorderLayout());
 		Container cp = stepWindow.getContentPane();
 		JPanel buttonPanel = new JPanel();
@@ -68,6 +67,8 @@ public class  StepWindowView extends JFrame {
 		stepWindow.setSize(scaleScreenSize(screenSize, 60));
 		stepWindow.setLocationRelativeTo(null);
 		stepWindow.setVisible(true);
+		ewv = new ErrorWindowView();
+		ewv.display();
 		
 		return stepWindow;
 		
@@ -108,7 +109,13 @@ public class  StepWindowView extends JFrame {
 	public JCheckBox getHasTreeView() {
 		return hasTreeView;
 	}
+	public JTextArea getErrorWindow() {
+		return ewv.getErrWindow();
+	}
 	
+	public ErrorWindowView getView() {
+		return ewv;
+	}
 	private Dimension scaleScreenSize(Dimension d, double percent) {
 
 		d.height *= (percent / 100);
