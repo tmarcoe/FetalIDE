@@ -3,9 +3,7 @@ package com.views;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -14,26 +12,34 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.Theme;
+import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
+import org.fife.ui.rtextarea.RTextScrollPane;
+
 import com.actionListeners.FetalListeners;
-import com.syntaxHighlighting.JEditTextArea;
-import com.syntaxHighlighting.languages.FetalTokenMarker;
 
 public class MainWindowView extends JFrame {
 	private static final long serialVersionUID = 1L;
 	JPopupMenu popup;
 	
-	public void MainView() {
-		JFrame mainWindow = new JFrame("Fetal Editor");
-		JEditTextArea mainEditor = new JEditTextArea();
-		mainEditor.getPainter().isBracketHighlightEnabled();
+	public void MainView() throws IOException {
+		JFrame mainWindow = this;
+		setTitle("Fetal Editor");
+
+		RSyntaxTextArea mainEditor = buildSyntaxEditor();
+		
+		
+		RTextScrollPane sp = new RTextScrollPane(mainEditor);
+		sp.setLineNumbersEnabled(true);
+
+		//TextLineNumber tln = new TextLineNumber((Jcomponent)mainEditor);
+
 		FetalListeners fl = new FetalListeners(mainWindow, mainEditor);
 	
 		JMenuBar mainMenuBar = new JMenuBar();
 		mainWindow.setJMenuBar(mainMenuBar);
-		
-
-		MouseListener popupListener = new PopupListener(popup);
-		mainEditor.addMouseListener(popupListener);
 
 		
 		// Add the menus
@@ -42,8 +48,8 @@ public class MainWindowView extends JFrame {
 		mainMenuBar.add(buildExecMenu(fl, mainEditor, mainWindow));
 
 
-		mainEditor.setTokenMarker(new FetalTokenMarker());
-		mainWindow.add(mainEditor);
+		
+		mainWindow.add(sp);
 		
 		//buildPopupMenu(fl, mainEditor, mainWindow);
 		
@@ -57,7 +63,7 @@ public class MainWindowView extends JFrame {
 
 	}
 	
-	public JMenu buildFileMenu(FetalListeners fl, JEditTextArea mainEditor) {
+	public JMenu buildFileMenu(FetalListeners fl, RSyntaxTextArea mainEditor) {
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem fmNew = new JMenuItem("New", KeyEvent.VK_N );
 		fmNew.setIcon(new ImageIcon("resources/image/new.gif"));
@@ -86,7 +92,7 @@ public class MainWindowView extends JFrame {
 		return fileMenu;
 	}
 	
-	public JMenu buildEditMenu(FetalListeners fl, JEditTextArea mainEditor) {
+	public JMenu buildEditMenu(FetalListeners fl, RSyntaxTextArea mainEditor) {
 		JMenu editMenu = new JMenu("Edit");
 		JMenuItem emCopy = new JMenuItem("Copy", KeyEvent.VK_C);
 		emCopy.setIcon(new ImageIcon("resources/image/copy.png"));
@@ -115,7 +121,7 @@ public class MainWindowView extends JFrame {
 		return editMenu;
 	}
 	
-	public JMenu buildExecMenu(FetalListeners fl, JEditTextArea mainEditor, JFrame mainWindow) {
+	public JMenu buildExecMenu(FetalListeners fl, RSyntaxTextArea mainEditor, JFrame mainWindow) {
 		JMenu execMenu = new JMenu("Execute");
 		JMenuItem xmRun = new JMenuItem("Run");
 		xmRun.setIcon(new ImageIcon("resources/image/run.png"));
@@ -131,32 +137,16 @@ public class MainWindowView extends JFrame {
 
 		return execMenu;
 	}
-	@SuppressWarnings("unused")
-	private JPopupMenu buildPopupMenu(FetalListeners fl, JEditTextArea mainEditor, JFrame mainWindow) {
-		popup = new JPopupMenu();
+	private  RSyntaxTextArea buildSyntaxEditor() throws IOException {
 		
-		JMenuItem pCopy = new JMenuItem("Copy");
-		JMenuItem pCut = new JMenuItem("Cut");
-		JMenuItem pPaste = new JMenuItem("Paste");
-		popup.add(pCopy);
-		popup.add(pCut);
-		popup.add(pPaste);
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory)TokenMakerFactory.getDefaultInstance();
+		atmf.putMapping("text/fetal", "org.fife.ui.rsyntaxtextarea.modes.FetalTokenMaker");
+		textArea.setSyntaxEditingStyle("text/fetal");
+		Theme theme = Theme.load(getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/eclipse.xml"));
+		theme.apply(textArea);
 		
-		fl.setCopy(pCopy, mainEditor);
-		fl.setCut(pCut, mainEditor);
-		fl.setPaste(pPaste, mainEditor);
-		
-		/*mainEditor.addMouseListener(new MouseAdapter() {
-
-			public void mouseClicked(MouseEvent e) {            
-	            popup.show(mainEditor, e.getX(), e.getY());
-	          }               
-
-		});*/
-		mainWindow.add(popup);
-		//mainEditor.setInheritsPopupMenu(true);
-		
-		return popup;
+		return textArea;
 	}
 	private Dimension scaleScreenSize(Dimension d, double percent) {
 
@@ -165,26 +155,5 @@ public class MainWindowView extends JFrame {
 		
 		return d;
 	}
-	class PopupListener extends MouseAdapter {
-        JPopupMenu popup;
-
-        PopupListener(JPopupMenu popupMenu) {
-            popup = popupMenu;
-        }
-
-        public void mousePressed(MouseEvent e) {
-            maybeShowPopup(e);
-        }
-
-        public void mouseReleased(MouseEvent e) {
-            maybeShowPopup(e);
-        }
-
-        private void maybeShowPopup(MouseEvent e) {
-            if (e.isPopupTrigger()) {
-                popup.setVisible(true);
-            }
-        }
-    }
 
 }

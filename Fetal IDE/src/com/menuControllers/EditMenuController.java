@@ -3,24 +3,24 @@ package com.menuControllers;
 import javax.swing.JFrame;
 import javax.swing.text.BadLocationException;
 
-import com.syntaxHighlighting.JEditTextArea;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 public class EditMenuController extends JFrame {
 	private static final long serialVersionUID = 1L;
 
-	public void copyText(JEditTextArea mainEditor) {
+	public void copyText(RSyntaxTextArea mainEditor) {
 		mainEditor.copy();
 	}
 	
-	public void cutText(JEditTextArea mainEditor) {
+	public void cutText(RSyntaxTextArea mainEditor) {
 		mainEditor.cut();
 	}
 	
-	public void pasteText(JEditTextArea mainEditor) {
+	public void pasteText(RSyntaxTextArea mainEditor) {
 		mainEditor.paste();
 	}
 
-	public void deleteText(JEditTextArea mainEditor) throws BadLocationException {
+	public void deleteText(RSyntaxTextArea mainEditor) throws BadLocationException {
 
 
 		int start = mainEditor.getSelectionStart();
@@ -28,11 +28,11 @@ public class EditMenuController extends JFrame {
 		mainEditor.getDocument().remove(start, length);
 	}
 
-	public void PasteText(JEditTextArea mainEditor) {
+	public void PasteText(RSyntaxTextArea mainEditor) {
 		mainEditor.paste();
 	}
 
-	public void SelectAll(JEditTextArea mainEditor) {
+	public void SelectAll(RSyntaxTextArea mainEditor) {
 		mainEditor.selectAll();
 	}
 

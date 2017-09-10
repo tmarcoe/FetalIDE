@@ -14,8 +14,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import com.actionListeners.FetalListeners;
-import com.syntaxHighlighting.JEditTextArea;
 
 public class  StepWindowView extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -25,12 +27,12 @@ public class  StepWindowView extends JFrame {
 	private JButton close;
 	private JCheckBox hasTreeView;
 	private FetalListeners fl;
-	private JEditTextArea mainEditor;
+	private RSyntaxTextArea mainEditor;
 	private ErrorWindowView ewv;
 	
 	
 	
-	public StepWindowView(FetalListeners fl, JEditTextArea editor) throws HeadlessException {
+	public StepWindowView(FetalListeners fl, RSyntaxTextArea editor) throws HeadlessException {
 		this.fl = fl;
 		this.mainEditor = editor;
 	}

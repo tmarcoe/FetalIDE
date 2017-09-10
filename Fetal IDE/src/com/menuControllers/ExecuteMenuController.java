@@ -12,13 +12,15 @@ import java.util.concurrent.Semaphore;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
+import javax.swing.text.BadLocationException;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import com.actionListeners.FetalDocumentListener;
 import com.ftl.derived.FetalParser;
 import com.ftl.derived.FetalParser.TransactionContext;
 import com.ftl.events.StepEvent;
 import com.ftl.events.StepEventListener;
 import com.ftl.helper.Variable;
-import com.syntaxHighlighting.JEditTextArea;
 import com.transaction.TransactionService;
 import com.views.StepWindowView;
 import com.xml.ScriptSetupFile;
@@ -28,11 +30,11 @@ public class ExecuteMenuController {
 	private TransactionService trans = null;
 	private JButton xmNext = null;
 	private StepWindowView swv=null;
-	private JEditTextArea editor = null;
+	private RSyntaxTextArea editor = null;
+	@SuppressWarnings("unused")
 	private FetalDocumentListener fetalListener;
 	private String openFile;
 	private static PrintStream stdOut;
-	@SuppressWarnings("unused")
 	private static PrintStream stdErr;
 
 	public void runApp(String editText, String openFile) throws Exception {
@@ -44,9 +46,9 @@ public class ExecuteMenuController {
 		ra.run(editText, null);
 	}
 	
-	public void stepApp(String editText, StepWindowView stepWindow, FetalDocumentListener fdl, JEditTextArea mainEditor, String openFile) throws IOException {
+	public void stepApp(String editText, StepWindowView stepWindow, FetalDocumentListener fdl, RSyntaxTextArea mainEditor, String openFile) throws IOException {
 		editor = mainEditor;
-		editor.getVertical().setValue(0);
+		//editor.getVertical().setValue(0);
 		fetalListener = fdl;
 		this.openFile = openFile;
 		swv = stepWindow;
@@ -69,7 +71,7 @@ public class ExecuteMenuController {
 		thread.start();
 	}
 	
-	public void Next(JEditTextArea mainEditor) {
+	public void Next(RSyntaxTextArea mainEditor) {
 		if (semaphore != null && trans !=null) {
 			semaphore.release();
 		}
@@ -116,9 +118,7 @@ public class ExecuteMenuController {
 				}
 
 				if (swv != null) {
-					String txt = editor.getText();
-					editor.setText(txt);
-					fetalListener.setModified(false);
+					editor.removeAllLineHighlights();
 					swv.getClose().setVisible(true);
 				}
 			}
@@ -186,14 +186,21 @@ public class ExecuteMenuController {
 
 		@Override
 		public void StepReceived(StepEvent se) {
-			
+
 			List<Variable> varList = trans.getVarList();
 			String displayVarList = "";
 			for(Variable var : varList) {
 				displayVarList += String.format("%s %s = %s\n", var.getType(), var.getName(), var.getValue());
 			}
 			swv.getVarDisplay().setText(displayVarList);
-			editor.getPainter().HighlightLine(editor.getGraphics(), trans.getLineNum(), trans.getPrevLine());
+			try {
+				editor.removeAllLineHighlights();
+				editor.addLineHighlight((trans.getLineNum() - 1), new Color(200,200,255));
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//editor.getPainter().HighlightLine(editor.getGraphics(), trans.getLineNum(), trans.getPrevLine());
 		}
     	
     }

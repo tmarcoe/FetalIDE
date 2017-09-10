@@ -8,10 +8,12 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.text.BadLocationException;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import com.menuControllers.EditMenuController;
 import com.menuControllers.ExecuteMenuController;
 import com.menuControllers.FileMenuController;
-import com.syntaxHighlighting.JEditTextArea;
 import com.views.StepWindowView;
 
 public class FetalListeners extends JFrame {
@@ -25,7 +27,7 @@ public class FetalListeners extends JFrame {
 	StepWindowView swv = null;
 	String openFile = null;
 
-	public FetalListeners(JFrame mainWindow, JEditTextArea mainEditor) throws HeadlessException {
+	public FetalListeners(JFrame mainWindow, RSyntaxTextArea mainEditor) throws HeadlessException {
 		this.mainWindow = mainWindow;
 		fmc = new FileMenuController();
 		emc = new EditMenuController();
@@ -42,7 +44,7 @@ public class FetalListeners extends JFrame {
 		this.mainWindow = mainWindow;
 	}
 
-	public void setExit(JMenuItem fmExit, JEditTextArea mainEditor) {
+	public void setExit(JMenuItem fmExit, RSyntaxTextArea mainEditor) {
 		fmExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				fmc.exitApp(mainWindow, fdl.isModified());
@@ -50,7 +52,7 @@ public class FetalListeners extends JFrame {
 		});
 	}
 
-	public void setOpen(JMenuItem fmOpen, JEditTextArea mainEditor) {
+	public void setOpen(JMenuItem fmOpen, RSyntaxTextArea mainEditor) {
 		fmOpen.addActionListener(new ActionListener() {
 
 			@Override
@@ -67,7 +69,7 @@ public class FetalListeners extends JFrame {
 		});
 	}
 	
-	public void setNew(JMenuItem fmNew, JEditTextArea mainEditor) {
+	public void setNew(JMenuItem fmNew, RSyntaxTextArea mainEditor) {
 		fmNew.addActionListener(new ActionListener() {
 
 			@Override
@@ -79,7 +81,7 @@ public class FetalListeners extends JFrame {
 		
 	}
 	
-	public void setSaveAs(JMenuItem fmSave, JEditTextArea mainEditor) {
+	public void setSaveAs(JMenuItem fmSave, RSyntaxTextArea mainEditor) {
 		
 		fmSave.addActionListener(new ActionListener() {
 
@@ -95,7 +97,7 @@ public class FetalListeners extends JFrame {
 		});
 	}
 
-	public void setCopy(JMenuItem emCopy, JEditTextArea mainEditor) {
+	public void setCopy(JMenuItem emCopy, RSyntaxTextArea mainEditor) {
 		emCopy.addActionListener(new ActionListener() {
 
 			@Override
@@ -105,7 +107,7 @@ public class FetalListeners extends JFrame {
 		});
 	}
 
-	public void setCut(JMenuItem emCut, JEditTextArea mainEditor) {
+	public void setCut(JMenuItem emCut, RSyntaxTextArea mainEditor) {
 
 		emCut.addActionListener(new ActionListener() {
 
@@ -116,7 +118,7 @@ public class FetalListeners extends JFrame {
 		});
 	}
 	
-	public void setDelete(JMenuItem emDelete, JEditTextArea mainEditor) {
+	public void setDelete(JMenuItem emDelete, RSyntaxTextArea mainEditor) {
 		
 		emDelete.addActionListener(new ActionListener() {
 
@@ -131,7 +133,7 @@ public class FetalListeners extends JFrame {
 		});
 	}
 	
-	public void setPaste(JMenuItem emPaste, JEditTextArea mainEditor) {
+	public void setPaste(JMenuItem emPaste, RSyntaxTextArea mainEditor) {
 		
 		emPaste.addActionListener(new ActionListener() {
 
@@ -142,7 +144,7 @@ public class FetalListeners extends JFrame {
 		});
 	}
 
-	public void setSelectAll(JMenuItem emSelectAll, JEditTextArea mainEditor) {
+	public void setSelectAll(JMenuItem emSelectAll, RSyntaxTextArea mainEditor) {
 		
 		emSelectAll.addActionListener(new ActionListener() {
 
@@ -153,7 +155,7 @@ public class FetalListeners extends JFrame {
 		});
 	}
 
-	public void setSave(JMenuItem fmSave, JEditTextArea mainEditor) {
+	public void setSave(JMenuItem fmSave, RSyntaxTextArea mainEditor) {
 		fmSave.addActionListener(new ActionListener() {
 
 			@Override
@@ -167,7 +169,7 @@ public class FetalListeners extends JFrame {
 		});		
 	}
 	
-	public void setRun(JMenuItem xmRun, JEditTextArea mainEditor) {
+	public void setRun(JMenuItem xmRun, RSyntaxTextArea mainEditor) {
 		
 	xmRun.addActionListener(new ActionListener() {
 
@@ -186,7 +188,7 @@ public class FetalListeners extends JFrame {
 		});		
 	}
 	
-	public void setStep(JMenuItem stp, JEditTextArea mainEditor, JFrame mainWindow) {
+	public void setStep(JMenuItem stp, RSyntaxTextArea mainEditor, JFrame mainWindow) {
 		FetalListeners fl = this;
 		stp.addActionListener(new ActionListener() {
 
@@ -206,7 +208,7 @@ public class FetalListeners extends JFrame {
 			}});
 	}
 	
-	public void setNext(JButton xmNext, JEditTextArea mainEditor) {
+	public void setNext(JButton xmNext, RSyntaxTextArea mainEditor) {
 		xmNext.addActionListener(new ActionListener() {
 
 			@Override

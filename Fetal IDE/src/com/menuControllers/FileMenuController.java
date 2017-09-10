@@ -13,7 +13,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.syntaxHighlighting.JEditTextArea;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import com.utils.PropertiesFile;
 
 public class FileMenuController extends JFrame {
@@ -39,7 +40,7 @@ public class FileMenuController extends JFrame {
 		}
 	}
 
-	public void openFile(JFrame mainWindow, JEditTextArea mainEditor) throws IOException {
+	public void openFile(JFrame mainWindow, RSyntaxTextArea mainEditor) throws IOException {
 		JFileChooser fc = new JFileChooser();
 		Properties prop = PropertiesFile.getProperties(propFile);
 		String workspace = prop.getProperty("workspace");
@@ -66,12 +67,12 @@ public class FileMenuController extends JFrame {
 				editBuffer += line + "\n";
 			}
 			mainEditor.setText(editBuffer);
-			mainEditor.getVertical().setValue(0);
+			//mainEditor.getVertical().setValue(0);
 		}
 
 	}
 
-	public boolean saveFile(JFrame mainWindow, JEditTextArea mainEditor) throws IOException {
+	public boolean saveFile(JFrame mainWindow, RSyntaxTextArea mainEditor) throws IOException {
 		if (lastSaveFile == null) {
 			saveFileAs(mainWindow, mainEditor);
 		}
@@ -80,7 +81,7 @@ public class FileMenuController extends JFrame {
 		return true;
 	}
 
-	public boolean saveFileAs(JFrame mainWindow, JEditTextArea mainEditor) throws IOException {
+	public boolean saveFileAs(JFrame mainWindow, RSyntaxTextArea mainEditor) throws IOException {
 
 		JFileChooser fc = new JFileChooser();
 
@@ -109,7 +110,7 @@ public class FileMenuController extends JFrame {
 		}
 	}
 
-	public void newFile(JEditTextArea mainEditor) {
+	public void newFile(RSyntaxTextArea mainEditor) {
 		lastSaveFile = null;
 		mainEditor.setText("");
 	}

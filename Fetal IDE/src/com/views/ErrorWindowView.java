@@ -3,8 +3,6 @@ package com.views;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
-import java.awt.Window;
-
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
@@ -19,10 +17,11 @@ public class ErrorWindowView extends JFrame {
 	
 	public void display() {
 
-		setUndecorated(true);
-		setOpacity((float) .8);
+		//setUndecorated(true);
+		//setOpacity((float) .8);
 		setAlwaysOnTop(true);
 		errWindow = new JTextArea();
+		errWindow.setLineWrap(true);
 		add(errWindow);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		pack();
