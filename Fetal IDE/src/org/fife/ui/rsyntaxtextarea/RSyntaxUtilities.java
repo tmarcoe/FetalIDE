@@ -16,6 +16,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Toolkit;
+import java.nio.CharBuffer;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -1550,5 +1551,16 @@ return c.getLineStartOffset(line);
 
 	}
 
+	public static CharSequence getNumberToken(char[] array, int start) {
+		String result = "";
+
+		for (int i = start; i < array.length; i++) {
+
+			if (isDigit(array[i]) == false && array[i] != '.' && array[i] != '-') break;
+			result = result + array[i];
+		}
+	
+		return result;
+	}
 
 }

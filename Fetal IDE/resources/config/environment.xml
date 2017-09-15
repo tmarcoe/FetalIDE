@@ -61,4 +61,30 @@
 			<var name="grossWage" type="decimal" value="100000.00"/>
 		</variables>
 	</file>
+	<file name="buyonehalfoff.cpn" >
+		<variables>
+			<var name="item" type="string" value="0099557009" />
+			<var name="couponValid" type="boolean" value="false" />
+			<var name="receipt" type="object" value="com.peachy.helper.TestReceipt" />
+			<var name="couponValue" type="decimal" value="0.00"/>
+			<var name="couponTax" type="decimal" value="0.00" />
+		</variables>
+	</file>
+	<file name="buyonetakeone.cpn" >
+		<variables>
+			<var name="item" type="string" value="0099557009" />
+			<var name="couponValid" type="boolean" value="false" />
+			<var name="receipt" type="object" value="com.peachy.helper.TestReceipt" />
+			<var name="couponValue" type="decimal" value="0.00"/>
+			<var name="couponTax" type="decimal" value="0.00" />
+		</variables>
+	</file>
+	<file name="welcome.cpn" >
+		<variables>
+			<var name="couponValid" type="boolean" value="false" />
+			<var name="receipt" type="object" value="com.peachy.helper.TestReceipt" />
+			<var name="couponValue" type="decimal" value="0.00"/>
+			<var name="couponTax" type="decimal" value="0.00" />
+		</variables>
+	</file>
 </configs>

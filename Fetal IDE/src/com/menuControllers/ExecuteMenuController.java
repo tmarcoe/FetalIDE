@@ -103,11 +103,6 @@ public class ExecuteMenuController {
 				semaphore = null;
 				trans = null;
 
-				if (xmNext != null) {
-					xmNext.setVisible(false);
-					xmNext = null;
-				}
-
 				if (stdOut != null ) {
 					System.setOut(stdOut);
 					stdOut = null;
@@ -120,6 +115,8 @@ public class ExecuteMenuController {
 				if (swv != null) {
 					editor.removeAllLineHighlights();
 					swv.getClose().setVisible(true);
+					swv.getNext().setEnabled(false);
+					swv.getHasTreeView().setEnabled(false);
 				}
 			}
 		}
@@ -195,7 +192,7 @@ public class ExecuteMenuController {
 			swv.getVarDisplay().setText(displayVarList);
 			try {
 				editor.removeAllLineHighlights();
-				editor.addLineHighlight((trans.getLineNum() - 1), new Color(200,200,255));
+				editor.addLineHighlight((trans.getLineNum() - 1), new Color(250,178,185));
 			} catch (BadLocationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

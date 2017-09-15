@@ -39,17 +39,17 @@
       <style token="RESERVED_WORD_2" fg="7f0055" bold="true"/>
       <style token="ANNOTATION" fg="808080"/>
       <style token="COMMENT_DOCUMENTATION" fg="3f5fbf"/>
-      <style token="COMMENT_EOL" fg="3f7f5f"/>
-      <style token="COMMENT_MULTILINE" fg="3f7f5f"/>
+      <style token="COMMENT_EOL" fg="00ca94" italic="true" />
+      <style token="COMMENT_MULTILINE" fg="00ca94" italic="true"/>
       <style token="COMMENT_KEYWORD" fg="7F9FBF" bold="true"/>
       <style token="COMMENT_MARKUP" fg="7f7f9f"/>
-      <style token="DATA_TYPE" fg="0000af" bold="true"/>
+      <style token="DATA_TYPE" fg="00107c" bold="true"/>
       <style token="FUNCTION" fg="000000"/>
       <style token="LITERAL_BOOLEAN" fg="7f0055" bold="true"/>
-      <style token="LITERAL_NUMBER_DECIMAL_INT" fg="000000"/>
+      <style token="LITERAL_NUMBER_DECIMAL_INT" fg="00d707"/>
       <style token="LITERAL_NUMBER_FLOAT" fg="000000"/>
       <style token="LITERAL_NUMBER_HEXADECIMAL" fg="000000"/>
-      <style token="LITERAL_STRING_DOUBLE_QUOTE" fg="2900ff"/>
+      <style token="LITERAL_STRING_DOUBLE_QUOTE" fg="0033ff"/>
       <style token="LITERAL_CHAR" fg="2900ff"/>
       <style token="LITERAL_BACKQUOTE" fg="2900ff"/>
       <style token="MARKUP_TAG_DELIMITER" fg="008080"/>

@@ -20,16 +20,197 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 public class FetalTokenMaker extends AbstractTokenMaker {
+	//private Pattern dateStr = Pattern.compile("^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$");
+	//	private Pattern decimalStr = Pattern.compile("/^(?!-0?(\\.0+)?$)-?(0|[1-9]\\d*)?(\\.\\d+)?(?<=\\d)$/");
+	private final String separators = "{}();";
 	protected final String operators = "=|><&";
-	protected final String separators = "()[]";
+
 	protected final String separators2 = ".,;";			// Characters you don't want syntax highlighted but separate identifiers.
 	protected final String shellVariables = "#-?$!*@_";	// Characters that are part of "$<char>" shell variables; e.g., "$_".
 
 
 	private int currentTokenStart;
 	private int currentTokenType;
+
+
+	/**
+	 * Constructor.
+	 */
+	public FetalTokenMaker() {
+		super();	// Initializes tokensToHighlight.
+	}
+
+
+	/**
+	 * Checks the token to give it the exact ID it deserves before
+	 * being passed up to the super method.
+	 *
+	 * @param segment <code>Segment</code> to get text from.
+	 * @param start Start offset in <code>segment</code> of token.
+	 * @param end End offset in <code>segment</code> of token.
+	 * @param tokenType The token's type.
+	 * @param startOffset The offset in the document at which the token occurs.
+	 */
 	@Override
-	public Token getTokenList(Segment text, int startTokenType, int startOffset) {
+	public void addToken(Segment segment, int start, int end, int tokenType, int startOffset) {
+
+		switch (tokenType) {
+			// Since reserved words, functions, and data types are all passed into here
+			// as "identifiers," we have to see what the token really is...
+			case Token.IDENTIFIER:
+				int value = wordsToHighlight.get(segment, start,end);
+				if (value!=-1)
+					tokenType = value;
+				break;
+			case Token.WHITESPACE:
+			case Token.SEPARATOR:
+			case Token.OPERATOR:
+			case Token.LITERAL_NUMBER_DECIMAL_INT:
+			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case Token.LITERAL_CHAR:
+			case Token.LITERAL_BACKQUOTE:
+			case Token.COMMENT_EOL:
+			case Token.PREPROCESSOR:
+			case Token.VARIABLE:
+				break;
+
+			default:
+				tokenType = Token.IDENTIFIER;
+				break;
+
+		}
+
+		super.addToken(segment, start, end, tokenType, startOffset);
+
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String[] getLineCommentStartAndEnd(int languageIndex) {
+		return new String[] { "#", null };
+	}
+
+
+	/**
+	 * Returns whether tokens of the specified type should have "mark
+	 * occurrences" enabled for the current programming language.
+	 *
+	 * @param type The token type.
+	 * @return Whether tokens of this type should have "mark occurrences"
+	 *         enabled.
+	 */
+	@Override
+	public boolean getMarkOccurrencesOfTokenType(int type) {
+		return type==Token.IDENTIFIER || type==Token.VARIABLE;
+	}
+
+
+	/**
+	 * Returns the words to highlight for UNIX shell scripts.
+	 *
+	 * @return A <code>TokenMap</code> containing the words to highlight for
+	 *         UNIX shell scripts.
+	 * @see org.fife.ui.rsyntaxtextarea.AbstractTokenMaker#getWordsToHighlight
+	 */
+	@Override
+	public TokenMap getWordsToHighlight() {
+
+		TokenMap tokenMap = new TokenMap();
+
+		int reservedWord = Token.RESERVED_WORD;
+		tokenMap.put("begin",			reservedWord);
+		tokenMap.put("end",			reservedWord);
+		tokenMap.put("getBalance",		reservedWord);
+		tokenMap.put("getVariableType",	reservedWord);
+		tokenMap.put("getDescription",	reservedWord);
+		tokenMap.put("today",			reservedWord);
+		tokenMap.put("getDays",			reservedWord);
+		tokenMap.put("dayOfTheWeek",	reservedWord);
+		tokenMap.put("getCalendarDay",	reservedWord);
+		tokenMap.put("getMonth",		reservedWord);
+		tokenMap.put("getYear",			reservedWord);
+		tokenMap.put("import",			reservedWord);
+		tokenMap.put("lookup",			reservedWord);
+		tokenMap.put("list",			reservedWord);
+		tokenMap.put("credit",			reservedWord);
+		tokenMap.put("debit",			reservedWord);
+		tokenMap.put("ledger",			reservedWord);
+		tokenMap.put("alias",			reservedWord);
+		tokenMap.put("mapFile",			reservedWord);
+		tokenMap.put("update",			reservedWord);
+		tokenMap.put("print",			reservedWord);
+		tokenMap.put("if",				reservedWord);
+		tokenMap.put("else",			reservedWord);
+		tokenMap.put("true",			reservedWord);
+		tokenMap.put("false",			reservedWord);
+		
+		int dataTypes = Token.DATA_TYPE;
+		tokenMap.put("decimal", dataTypes);
+		tokenMap.put("number", dataTypes);
+		tokenMap.put("string", dataTypes);
+		tokenMap.put("boolean", dataTypes);
+		tokenMap.put("date", dataTypes);
+		tokenMap.put("object", dataTypes);
+		tokenMap.put("dao", dataTypes);
+
+		int operator = Token.OPERATOR;
+		
+		//Assignment operator
+		tokenMap.put("=", 		operator);
+		
+		// Binary operators
+		tokenMap.put("+", 		operator);
+		tokenMap.put("-", 		operator);
+		tokenMap.put("*", 		operator);
+		tokenMap.put("/",		operator);
+		tokenMap.put("^",		operator);
+		tokenMap.put("%",		operator);
+		
+		// Unary operators
+		tokenMap.put("+=", 		operator);
+		tokenMap.put("-=", 		operator);
+		tokenMap.put("*=", 		operator);
+		tokenMap.put("/=", 		operator);
+		tokenMap.put("^=",		operator);
+		tokenMap.put("%=", 		operator);
+		
+		// Bitwise operators
+		tokenMap.put("&",		operator);
+		tokenMap.put("|",		operator);
+		tokenMap.put("!",		operator);
+		
+		// Comparison operators
+		tokenMap.put("==",		operator);
+		tokenMap.put("<",		operator);
+		tokenMap.put("<=",		operator);
+		tokenMap.put(">",		operator);
+		tokenMap.put(">=",		operator);
+		tokenMap.put("!=",		operator);
+		
+		//Logical operators
+		tokenMap.put("&&",		operator);
+		tokenMap.put("||",		operator);
+		tokenMap.put("^^",		operator);
+
+		return tokenMap;
+
+	}
+
+
+	/**
+	 * Returns a list of tokens representing the given text.
+	 *
+	 * @param text The text to break into tokens.
+	 * @param startTokenType The token with which to start tokenizing.
+	 * @param startOffset The offset at which the line of tokens begins.
+	 * @return A linked list of tokens representing <code>text</code>.
+	 */
+	@Override
+	public Token getTokenList(Segment text, int startTokenType, final int startOffset) {
+
 		resetTokenList();
 
 		char[] array = text.array;
@@ -85,24 +266,20 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 							}
 							break;
 
-						case '\'':
-							if (backslash) { // Escaped single quote => call '\'' an identifier.
-								addToken(text, currentTokenStart,i, Token.IDENTIFIER, newStartOffset+currentTokenStart);
-								backslash = false;
-							}
-							else {
-								currentTokenType = Token.LITERAL_CHAR;
-							}
-							break;
 
-						case '\\':
-							addToken(text, currentTokenStart,i, Token.IDENTIFIER, newStartOffset+currentTokenStart);
-							currentTokenType = Token.NULL;
-							backslash = !backslash;
+						case '/':
+							char nextChar = array[i+1];
+							if (nextChar == '/' ) {
+								currentTokenType = Token.COMMENT_EOL;
+							}else if (nextChar == '*') {
+								currentTokenType = Token.COMMENT_MULTILINE;
+							}else {
+								currentTokenType = Token.OPERATOR;
+							}
 							break;
 
 						default:
-							if (RSyntaxUtilities.isDigit(c)) {
+							if (RSyntaxUtilities.isDigit(c) || c == '.' || c == '-' ) {
 								currentTokenType = Token.LITERAL_NUMBER_DECIMAL_INT;
 								break;
 							}
@@ -138,26 +315,12 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 					break;
 
 				case Token.WHITESPACE:
-
+					char nextChar = array[i+1];
 					switch (c) {
 
 						case ' ':
 						case '\t':
 							break;	// Still whitespace.
-
-						case '\\':
-							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
-							addToken(text, i,i, Token.IDENTIFIER, newStartOffset+i);
-							currentTokenType = Token.NULL;
-							backslash = true; // Previous char whitespace => this must be first backslash.
-							break;
-
-						case '`': // Don't need to worry about backslashes as previous char is space.
-							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
-							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_BACKQUOTE;
-							backslash = false;
-							break;
 
 						case '"': // Don't need to worry about backslashes as previous char is space.
 							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
@@ -165,12 +328,24 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 							currentTokenType = Token.LITERAL_STRING_DOUBLE_QUOTE;
 							backslash = false;
 							break;
+							
+						case '+':
 
-						case '\'': // Don't need to worry about backslashes as previous char is space.
+							if (nextChar == '=' ) {
+								currentTokenType = Token.OPERATOR;
+							}
+							break;
+						case '/':
+
 							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_CHAR;
-							backslash = false;
+							if (nextChar == '/' ) {
+								currentTokenType = Token.COMMENT_EOL;
+							}else if (nextChar == '*') {
+								currentTokenType = Token.COMMENT_MULTILINE;
+							}else {
+								currentTokenType = Token.OPERATOR;
+							}
 							break;
 
 						default:	// Add the whitespace token and start anew.
@@ -178,7 +353,7 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
 
-							if (RSyntaxUtilities.isDigit(c)) {
+							if (RSyntaxUtilities.isDigit(c) || c == '.' || c == '-') {
 								currentTokenType = Token.LITERAL_NUMBER_DECIMAL_INT;
 								break;
 							}
@@ -244,20 +419,19 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 							backslash = false;
 							break;
 
-						case '\'': // Don't need to worry about backslashes as previous char is non-backslash.
-							addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
-							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_CHAR;
-							backslash = false;
-							break;
 
-						case '\\':
-							addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
-							addToken(text, i,i, Token.IDENTIFIER, newStartOffset+i);
+						case '=': // Special case here; when you have "identifier=<value>" in shell, "identifier" is a variable.
+							addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+							addToken(text, i,i, Token.OPERATOR, newStartOffset+i);
 							currentTokenType = Token.NULL;
-							backslash = true;
 							break;
 
+						case '+':
+							char next = array[i+1];
+							if (next == '=' ) {
+								currentTokenType = Token.OPERATOR;
+							}
+							break;
 						default:
 							if (RSyntaxUtilities.isLetterOrDigit(c) || c=='/' || c=='_') {
 								break;	// Still an identifier of some type.
@@ -314,23 +488,10 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 							backslash = false;
 							break;
 
-						case '\'': // Don't need to worry about backslashes as previous char is non-backslash.
-							addToken(text, currentTokenStart,i-1, Token.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
-							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_CHAR;
-							backslash = false;
-							break;
-
-						case '\\':
-							addToken(text, currentTokenStart,i-1, Token.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
-							addToken(text, i,i, Token.IDENTIFIER, newStartOffset+i);
-							currentTokenType = Token.NULL;
-							backslash = true;
-							break;
 
 						default:
 
-							if (RSyntaxUtilities.isDigit(c)) {
+							if (RSyntaxUtilities.isDigit(c) || c == '.' || c == '-' ) {
 								break;	// Still a literal number.
 							}
 							int indexOf = operators.indexOf(c);
@@ -365,12 +526,73 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 					break;
 
 				case Token.VARIABLE:
+
+					// Note that we first arrive here AFTER the '$' character.
+					// First check if the variable name is enclosed in '{' and '}' characters.
+					if (c=='{') {
+						while (++i<end) {
+							if (array[i]=='}') {
+								addToken(text, currentTokenStart,i, Token.VARIABLE, newStartOffset+currentTokenStart);
+								currentTokenType = Token.NULL;
+								break;
+							}
+						} // End of while (++i<end).
+						if (i==end) { // Happens when '}' wasn't found...
+							addToken(text, currentTokenStart,end-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+							currentTokenType = Token.NULL;
+						}
+						break;
+					} // End of if (i<end-1 && array[i+1]=='{').
+
+					// If we didn't find the '{' character, find the end of the variable...
+					while (i<end) {
+						c = array[i];	// Not needed the first iteration, but can't think of a better way to do it...
+						if (!RSyntaxUtilities.isLetterOrDigit(c) && shellVariables.indexOf(c)==-1 && c!='_') {
+							addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+							i--;
+							currentTokenType = Token.NULL;
+							break;
+						}
+						i++;
+					}
+
+					// This only happens if we never found the end of the variable in the loop above.
+					if (i==end) {
+						addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+						currentTokenType = Token.NULL;
+					}
+
 					break;
 
 				case Token.COMMENT_EOL:
+					// If we got here, then the line != "#" only, so check for "#!".
+					if (c=='!')
+						currentTokenType = Token.PREPROCESSOR;
+					i = end - 1;
+					addToken(text, currentTokenStart,i, currentTokenType, newStartOffset+currentTokenStart);
+					// We need to set token type to null so at the bottom we don't add one more token.
+					currentTokenType = Token.NULL;
+
 					break;
-	
+
 				case Token.LITERAL_CHAR:
+
+						if (c=='\\') {
+							backslash = !backslash; // Okay because if we got in here, backslash was initially false.
+						}
+						else {
+							if (c=='\'' && !backslash) {
+								addToken(text, currentTokenStart,i, Token.LITERAL_CHAR, newStartOffset+currentTokenStart);
+								currentTokenStart = i + 1;
+								currentTokenType = Token.NULL;
+								// backslash is definitely false when we leave.
+							}
+
+							backslash = false; // Need to set backslash to false here as a character was typed.
+
+						}
+						// Otherwise, we're still an unclosed char literal...
+
 						break;
 
 				case Token.LITERAL_BACKQUOTE:
@@ -389,6 +611,89 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 									break;
 								}
 								backslash = false;
+								break;
+
+							// Variable in the backquote string...
+							case '$':
+
+								if (backslash==true) {
+									backslash = false;
+									break;
+								}
+
+								// Add the string up-to the variable.
+								addToken(text, currentTokenStart,i-1, Token.LITERAL_BACKQUOTE, newStartOffset+currentTokenStart);
+								currentTokenType = Token.VARIABLE;
+								currentTokenStart = i;
+
+								// First check if the variable name is enclosed in '{' and '}' characters.
+								if (i<end-1 && array[i+1]=='{') {
+									i++; // Now we're on the '{' char.
+									while (++i<end) {
+										if (array[i]=='}') {
+											addToken(text, currentTokenStart,i, Token.VARIABLE, newStartOffset+currentTokenStart);
+											i++;
+											if (i<end) {
+												c = array[i];
+												if (c=='`') { // The only rub - back quote right after variable.
+													addToken(text, i,i, Token.LITERAL_BACKQUOTE, newStartOffset+i);
+													currentTokenType = Token.NULL;
+													break;
+												}
+												else { // Continue on with the string.
+													currentTokenStart = i;
+													currentTokenType = Token.LITERAL_BACKQUOTE;
+													i--;
+													break;
+												}
+											}
+											else { // i==end = "trick" this method so that the string is continued to the next line.
+												currentTokenStart = i;
+												currentTokenType = Token.LITERAL_BACKQUOTE;
+												break; // So we don't hit the condition below.
+											}
+										} // End of if (array[i]=='}').
+									} // End of while (++i<end).
+									if (i==end) { // Happens when '}' wasn't found...
+										addToken(text, currentTokenStart,end-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+										currentTokenStart = end; // ???
+										currentTokenType = Token.LITERAL_BACKQUOTE;
+										break;
+									}
+								} // End of if (i<end-1 && array[i+1]=='{').
+
+								// If we reached the end of the variable, get out.
+								if (currentTokenType==Token.NULL || currentTokenType==Token.LITERAL_BACKQUOTE)
+									break;
+
+								// If we didn't find the '{' character, find the end of the variable...
+								// Increment first to skip the '$'.
+								while (++i<end) {
+									c = array[i];
+									if (!RSyntaxUtilities.isLetterOrDigit(c) && shellVariables.indexOf(c)==-1 && c!='_') {
+										addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+										if (c=='`') { // The only rub.
+											addToken(text, i,i, Token.LITERAL_BACKQUOTE, newStartOffset+i);
+											currentTokenType = Token.NULL;
+											break;
+										}
+										else {
+											currentTokenStart = i;
+											currentTokenType = Token.LITERAL_BACKQUOTE;
+											i--;
+											break;
+										}
+									}
+								}
+
+								// This only happens if we never found the end of the variable in the loop above.
+								// We "trick" this method so that the backquote string token is at the end.
+								if (i==end) {
+									addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+									currentTokenStart = i;
+									currentTokenType = Token.LITERAL_BACKQUOTE;
+								}
+
 								break;
 
 							// Otherwise, we're still in an unclosed string...
@@ -538,99 +843,5 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 
 	}
 
-	@Override
-	public TokenMap getWordsToHighlight() {
-		TokenMap tokenMap = new TokenMap();
-		
-		//Reserve words
-		tokenMap.put("begin", Token.RESERVED_WORD);
-		tokenMap.put("end", Token.RESERVED_WORD);
-		tokenMap.put("getBalance", Token.RESERVED_WORD);
-		tokenMap.put("getVariableType", Token.RESERVED_WORD);
-		tokenMap.put("getDescription", Token.RESERVED_WORD);
-		tokenMap.put("today", Token.RESERVED_WORD);
-		tokenMap.put("getDays", Token.RESERVED_WORD);
-		tokenMap.put("dayOfTheWeek", Token.RESERVED_WORD);
-		tokenMap.put("getCalendarDay", Token.RESERVED_WORD);
-		tokenMap.put("getMonth", Token.RESERVED_WORD);
-		tokenMap.put("getYear", Token.RESERVED_WORD);
-		tokenMap.put("import", Token.RESERVED_WORD);
-		tokenMap.put("lookup", Token.RESERVED_WORD);
-		tokenMap.put("list", Token.RESERVED_WORD);
-		tokenMap.put("credit", Token.RESERVED_WORD);
-		tokenMap.put("debit", Token.RESERVED_WORD);
-		tokenMap.put("ledger", Token.RESERVED_WORD);
-		tokenMap.put("alias", Token.RESERVED_WORD);
-		tokenMap.put("mapFile", Token.RESERVED_WORD);
-		tokenMap.put("update", Token.RESERVED_WORD);
-		tokenMap.put("print", Token.RESERVED_WORD);
-		tokenMap.put("if", Token.RESERVED_WORD);
-		tokenMap.put("else", Token.RESERVED_WORD);
-		
-		tokenMap.put("true", Token.LITERAL_BOOLEAN);
-		tokenMap.put("false", Token.LITERAL_BOOLEAN);
-		
-		//DataTypes
-		tokenMap.put("decimal",Token.DATA_TYPE);
-		tokenMap.put("number",Token.DATA_TYPE);
-		tokenMap.put("string",Token.DATA_TYPE);
-		tokenMap.put("boolean",Token.DATA_TYPE);
-		tokenMap.put("date",Token.DATA_TYPE);
-		tokenMap.put("object",Token.DATA_TYPE);
-		tokenMap.put("dao",Token.DATA_TYPE);
-		
-		//Unary operators
-		tokenMap.put("+=", Token.OPERATOR);
-		tokenMap.put("-=", Token.OPERATOR);
-		tokenMap.put("*=", Token.OPERATOR);
-		tokenMap.put("/=", Token.OPERATOR);
-		tokenMap.put("%=", Token.OPERATOR);
-		tokenMap.put("^=", Token.OPERATOR);
-		
-		//Binary operators
-		tokenMap.put("+", Token.OPERATOR);
-		tokenMap.put("-", Token.OPERATOR);
-		tokenMap.put("*", Token.OPERATOR);
-		tokenMap.put("/", Token.OPERATOR);
-		tokenMap.put("%", Token.OPERATOR);
-		tokenMap.put("^", Token.OPERATOR);
-		
-		//Bitwise operator
-		tokenMap.put("&", Token.OPERATOR);
-		tokenMap.put("|", Token.OPERATOR);
-		tokenMap.put("!", Token.OPERATOR);
-		
-		//comparison operators
-		tokenMap.put("==", Token.OPERATOR);
-		tokenMap.put("<", Token.OPERATOR);
-		tokenMap.put("<=", Token.OPERATOR);
-		tokenMap.put(">", Token.OPERATOR);
-		tokenMap.put(">=", Token.OPERATOR);
-		tokenMap.put("!=", Token.OPERATOR);
-		
-		//Logical operators
-		tokenMap.put("&&", Token.OPERATOR);
-		tokenMap.put("!!", Token.OPERATOR);
-		tokenMap.put("^^", Token.OPERATOR);
-		
-		
-		return tokenMap;
-	}
-
-	@Override
-	public void addToken(Segment segment, int start, int end, int tokenType, int startOffset) {
-		
-		   if (tokenType==Token.IDENTIFIER) {
-			      int value = wordsToHighlight.get(segment, start, end);
-			      if (value != -1) {
-			         tokenType = value;
-			      }
-			   }
-		   
-		super.addToken(segment, start, end, tokenType, startOffset);
-	}
 	
-	
-
-
 }

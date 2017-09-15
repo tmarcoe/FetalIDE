@@ -59,7 +59,9 @@ public class FetalListeners extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					fmc.openFile(mainWindow, mainEditor);
-					openFile = fmc.getLastSaveFile().getName();
+					if (fmc.getLastSaveFile() != null) {
+						openFile = fmc.getLastSaveFile().getName();
+					}
 					fdl.setModified(false);
 				} catch (IOException e1) {
 					e1.printStackTrace();
