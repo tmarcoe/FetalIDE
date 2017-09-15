@@ -32,7 +32,7 @@ public class FetalListeners extends JFrame {
 		this.mainWindow = mainWindow;
 		fmc = new FileMenuController();
 		emc = new EditMenuController();
-		fdl = new FetalDocumentListener(mainEditor);
+		fdl = new FetalDocumentListener(mainEditor, mainWindow);
 		xmc = new ExecuteMenuController();
 		mainEditor.getDocument().addDocumentListener(fdl);
 	}
@@ -67,6 +67,7 @@ public class FetalListeners extends JFrame {
 					mainWindow.getEmRedo().setText("Can't undo");
 					if (fmc.getLastSaveFile() != null) {
 						openFile = fmc.getLastSaveFile().getName();
+						mainWindow.getStatus().setText(openFile);
 					}
 					fdl.setModified(false);
 				} catch (IOException e1) {
@@ -85,6 +86,7 @@ public class FetalListeners extends JFrame {
 				fdl.setModified(false);
 				fmc.newFile(mainEditor);
 				openFile = null;
+				mainWindow.getStatus().setText("");
 			}});
 		
 	}

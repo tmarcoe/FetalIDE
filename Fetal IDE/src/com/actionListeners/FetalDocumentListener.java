@@ -6,17 +6,21 @@ import javax.swing.event.DocumentListener;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import com.views.MainWindowView;
+
 public class FetalDocumentListener implements DocumentListener {
 	private boolean modified;
 
 	RSyntaxTextArea mainEditor;
+	MainWindowView mainWindow;
 	private JMenuItem undo;
 	private JMenuItem redo;
 	
 	
-	public FetalDocumentListener(RSyntaxTextArea mainEditor) {
+	public FetalDocumentListener(RSyntaxTextArea mainEditor, MainWindowView mainWindow) {
 		super();
 		this.mainEditor = mainEditor;
+		this.mainWindow = mainWindow;
 	}
 
 	public JMenuItem getUndo() {
@@ -40,12 +44,20 @@ public class FetalDocumentListener implements DocumentListener {
 	}
 
 	public void setModified(boolean modified) {
+
+		String fileAndStatus = mainWindow.getStatus().getText().replace('*', '\0');
 		this.modified = modified;
+		if (modified == false && fileAndStatus.length() > 0) {
+			mainWindow.getStatus().setText(fileAndStatus);
+		}else if (fileAndStatus.length() > 0 ){
+			mainWindow.getStatus().setText(fileAndStatus + "*");
+		}
 	}
 
 	@Override
 	public void insertUpdate(DocumentEvent e) {
-		modified = true;
+
+		setModified(true);
 		setUndoToTrue();
 		setRedoToFalse();
 		setRedoToTrue();
@@ -54,7 +66,8 @@ public class FetalDocumentListener implements DocumentListener {
 
 	@Override
 	public void removeUpdate(DocumentEvent e) {
-		modified = true;
+
+		setModified(true);
 		setUndoFalse();
 		setRedoToFalse();
 		setRedoToTrue();
@@ -63,7 +76,8 @@ public class FetalDocumentListener implements DocumentListener {
 
 	@Override
 	public void changedUpdate(DocumentEvent e) {
-		modified = true;
+
+		setModified(true);
 		setUndoToTrue();
 		setRedoToTrue();
 		setRedoToFalse();
@@ -75,6 +89,7 @@ public class FetalDocumentListener implements DocumentListener {
 		if (undo != null && mainEditor.canUndo() == false) {
 			undo.setEnabled(false);
 			undo.setText("Can't Undo");
+			setModified(false);
 		}
 	}
 	

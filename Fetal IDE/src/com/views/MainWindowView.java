@@ -1,16 +1,22 @@
 package com.views;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextPane;
+import javax.swing.border.BevelBorder;
 
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -24,11 +30,16 @@ public class MainWindowView extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JMenuItem emUndo;
 	private JMenuItem emRedo;
+	private JTextPane status;
 	
 	public void MainView() throws IOException {
+		JPanel statusBar = new JPanel();
+		statusBar.setLayout(new BorderLayout());
+		status = new JTextPane();
 		JFrame mainWindow = this;
+		mainWindow.setLayout(new BorderLayout());
 		setTitle("Fetal Editor");
-
+		Container cp = mainWindow.getContentPane();
 		RSyntaxTextArea mainEditor = buildSyntaxEditor();
 		
 		
@@ -51,8 +62,14 @@ public class MainWindowView extends JFrame {
 		buildPopUpMenu(fl, mainEditor);
 
 		
-		mainWindow.add(sp);
-		
+		cp.add(sp, BorderLayout.CENTER);
+		statusBar.setPreferredSize(new Dimension(cp.getWidth(), 35));
+		statusBar.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+
+		statusBar.add(status, BorderLayout.LINE_START);
+		status.setEditable(false);
+
+		cp.add(statusBar, BorderLayout.PAGE_END);
 		//buildPopupMenu(fl, mainEditor, mainWindow);
 		
 		// Prepare to display the window
@@ -185,6 +202,10 @@ public class MainWindowView extends JFrame {
 
 	public JMenuItem getEmRedo() {
 		return emRedo;
+	}
+
+	public JTextPane getStatus() {
+		return status;
 	}
 
 	

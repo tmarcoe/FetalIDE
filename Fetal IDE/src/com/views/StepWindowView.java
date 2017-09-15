@@ -14,7 +14,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.actionListeners.FetalListeners;
@@ -85,7 +84,7 @@ public class  StepWindowView extends JFrame {
 		*/
 		textArea.setPreferredSize(size);
 		textArea.setBorder(BorderFactory.createTitledBorder(title));
-		
+
 		cp.add(textArea, layout);
 
 		
