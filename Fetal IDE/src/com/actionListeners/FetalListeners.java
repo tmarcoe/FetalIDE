@@ -14,12 +14,13 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import com.menuControllers.EditMenuController;
 import com.menuControllers.ExecuteMenuController;
 import com.menuControllers.FileMenuController;
+import com.views.MainWindowView;
 import com.views.StepWindowView;
 
 public class FetalListeners extends JFrame {
 	private static final long serialVersionUID = 1L;
 
-	private JFrame mainWindow;
+	private MainWindowView mainWindow;
 	FileMenuController fmc;
 	EditMenuController emc;
 	ExecuteMenuController xmc;
@@ -27,20 +28,20 @@ public class FetalListeners extends JFrame {
 	StepWindowView swv = null;
 	String openFile = null;
 
-	public FetalListeners(JFrame mainWindow, RSyntaxTextArea mainEditor) throws HeadlessException {
+	public FetalListeners(MainWindowView mainWindow, RSyntaxTextArea mainEditor) throws HeadlessException {
 		this.mainWindow = mainWindow;
 		fmc = new FileMenuController();
 		emc = new EditMenuController();
-		fdl = new FetalDocumentListener();
+		fdl = new FetalDocumentListener(mainEditor);
 		xmc = new ExecuteMenuController();
 		mainEditor.getDocument().addDocumentListener(fdl);
 	}
 
-	public JFrame getMainWindow() {
+	public MainWindowView getMainWindow() {
 		return mainWindow;
 	}
 
-	public void setMainWindow(JFrame mainWindow) {
+	public void setMainWindow(MainWindowView mainWindow) {
 		this.mainWindow = mainWindow;
 	}
 
@@ -59,6 +60,11 @@ public class FetalListeners extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					fmc.openFile(mainWindow, mainEditor);
+					mainEditor.discardAllEdits();
+					mainWindow.getEmUndo().setEnabled(false);
+					mainWindow.getEmUndo().setText("Can't undo");
+					mainWindow.getEmRedo().setEnabled(false);
+					mainWindow.getEmRedo().setText("Can't undo");
 					if (fmc.getLastSaveFile() != null) {
 						openFile = fmc.getLastSaveFile().getName();
 					}
@@ -97,6 +103,36 @@ public class FetalListeners extends JFrame {
 
 			}
 		});
+	}
+
+	public void setUndo(JMenuItem emUndo, RSyntaxTextArea mainEditor ) {
+		fdl.setUndo(emUndo);
+		emUndo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				emc.undo(mainEditor);
+				if (mainEditor.canUndo() == false) {
+					fdl.setModified(false);
+					emUndo.setEnabled(false);
+					emUndo.setText("Can't undo");
+				}
+			}});
+	}
+	
+	public void setRedo(JMenuItem emRedo, RSyntaxTextArea mainEditor ) {
+		fdl.setRedo(emRedo);
+		emRedo.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				emc.redo(mainEditor);
+				fdl.setModified(true);
+				if (mainEditor.canRedo() == false) {
+					emRedo.setEnabled(false);
+					emRedo.setText("Can't Redo");
+				}
+			}});
 	}
 
 	public void setCopy(JMenuItem emCopy, RSyntaxTextArea mainEditor) {
@@ -228,6 +264,17 @@ public class FetalListeners extends JFrame {
 				}
 				stepWindow.dispose();
 				swv = null;
+			}});
+	}
+	
+	public void setRefresh(JMenuItem refresh, RSyntaxTextArea mainEditor) {
+		refresh.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String menuBuffer = mainEditor.getText();
+				mainEditor.setText(menuBuffer);
+				fdl.setModified(false);
 			}});
 	}
 

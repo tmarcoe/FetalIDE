@@ -20,6 +20,16 @@ public class EditMenuController extends JFrame {
 		mainEditor.paste();
 	}
 
+	public void undo(RSyntaxTextArea mainEditor) {
+		mainEditor.undoLastAction();
+	}
+
+	public void redo(RSyntaxTextArea mainEditor) {
+		mainEditor.redoLastAction();
+	}
+
+
+	
 	public void deleteText(RSyntaxTextArea mainEditor) throws BadLocationException {
 
 

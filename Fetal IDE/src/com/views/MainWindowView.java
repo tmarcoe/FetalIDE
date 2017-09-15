@@ -22,7 +22,8 @@ import com.actionListeners.FetalListeners;
 
 public class MainWindowView extends JFrame {
 	private static final long serialVersionUID = 1L;
-	JPopupMenu popup;
+	private JMenuItem emUndo;
+	private JMenuItem emRedo;
 	
 	public void MainView() throws IOException {
 		JFrame mainWindow = this;
@@ -36,7 +37,7 @@ public class MainWindowView extends JFrame {
 
 		//TextLineNumber tln = new TextLineNumber((Jcomponent)mainEditor);
 
-		FetalListeners fl = new FetalListeners(mainWindow, mainEditor);
+		FetalListeners fl = new FetalListeners(this, mainEditor);
 	
 		JMenuBar mainMenuBar = new JMenuBar();
 		mainWindow.setJMenuBar(mainMenuBar);
@@ -46,7 +47,8 @@ public class MainWindowView extends JFrame {
 		mainMenuBar.add(buildFileMenu(fl, mainEditor));
 		mainMenuBar.add(buildEditMenu(fl, mainEditor));
 		mainMenuBar.add(buildExecMenu(fl, mainEditor, mainWindow));
-
+		
+		buildPopUpMenu(fl, mainEditor);
 
 		
 		mainWindow.add(sp);
@@ -94,6 +96,15 @@ public class MainWindowView extends JFrame {
 	
 	public JMenu buildEditMenu(FetalListeners fl, RSyntaxTextArea mainEditor) {
 		JMenu editMenu = new JMenu("Edit");
+		
+		emUndo = new JMenuItem("Can't undo");
+		emUndo.setIcon(new ImageIcon("resources/image/undo.png"));
+		emUndo.setEnabled(false);
+		
+		emRedo = new JMenuItem("can't Redo");
+		emRedo.setIcon(new ImageIcon("resources/image/redo.png"));
+		emRedo.setEnabled(false);
+		
 		JMenuItem emCopy = new JMenuItem("Copy", KeyEvent.VK_C);
 		emCopy.setIcon(new ImageIcon("resources/image/copy.png"));
 		JMenuItem emCut = new JMenuItem("Cut", KeyEvent.VK_T);
@@ -105,6 +116,9 @@ public class MainWindowView extends JFrame {
 		JMenuItem emSelectAll = new JMenuItem("Select All", KeyEvent.VK_L);
 		emSelectAll.setIcon(new ImageIcon("resources/image/selectAll.png"));
 		
+		editMenu.add(emUndo);
+		editMenu.add(emRedo);
+		editMenu.addSeparator();
 		editMenu.add(emCopy);
 		editMenu.add(emCut);
 		editMenu.add(emPaste);
@@ -112,6 +126,8 @@ public class MainWindowView extends JFrame {
 		editMenu.addSeparator();
 		editMenu.add(emSelectAll);
 		
+		fl.setUndo(emUndo, mainEditor);
+		fl.setRedo(emRedo, mainEditor);
 		fl.setCopy(emCopy, mainEditor);
 		fl.setCut(emCut, mainEditor);
 		fl.setDelete(emDelete, mainEditor);
@@ -148,6 +164,13 @@ public class MainWindowView extends JFrame {
 		
 		return textArea;
 	}
+	private void buildPopUpMenu(FetalListeners fl, RSyntaxTextArea mainEditor) {
+		JPopupMenu popup = mainEditor.getPopupMenu();
+		JMenuItem refresh = new JMenuItem("Refresh");
+		
+		fl.setRefresh(refresh, mainEditor);
+		popup.add(refresh);
+	}
 	private Dimension scaleScreenSize(Dimension d, double percent) {
 
 		d.height *= (percent / 100);
@@ -156,4 +179,13 @@ public class MainWindowView extends JFrame {
 		return d;
 	}
 
+	public JMenuItem getEmUndo() {
+		return emUndo;
+	}
+
+	public JMenuItem getEmRedo() {
+		return emRedo;
+	}
+
+	
 }
