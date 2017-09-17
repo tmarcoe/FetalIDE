@@ -14,19 +14,23 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import com.menuControllers.EditMenuController;
 import com.menuControllers.ExecuteMenuController;
 import com.menuControllers.FileMenuController;
+import com.menuControllers.SetupMenuController;
 import com.views.MainWindowView;
+import com.views.SetupWindowView;
 import com.views.StepWindowView;
 
 public class FetalListeners extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private MainWindowView mainWindow;
-	FileMenuController fmc;
-	EditMenuController emc;
-	ExecuteMenuController xmc;
-	FetalDocumentListener fdl;
-	StepWindowView swv = null;
-	String openFile = null;
+	private SetupWindowView prefWindow;
+	private FileMenuController fmc;
+	private EditMenuController emc;
+	private ExecuteMenuController xmc;
+	private SetupMenuController smc;
+	private FetalDocumentListener fdl;
+	private StepWindowView swv = null;
+	private String openFile = null;
 
 	public FetalListeners(MainWindowView mainWindow, RSyntaxTextArea mainEditor) throws HeadlessException {
 		this.mainWindow = mainWindow;
@@ -34,6 +38,7 @@ public class FetalListeners extends JFrame {
 		emc = new EditMenuController();
 		fdl = new FetalDocumentListener(mainEditor, mainWindow);
 		xmc = new ExecuteMenuController();
+		smc = new SetupMenuController();
 		mainEditor.getDocument().addDocumentListener(fdl);
 	}
 
@@ -276,8 +281,49 @@ public class FetalListeners extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String menuBuffer = mainEditor.getText();
 				mainEditor.setText(menuBuffer);
+				mainEditor.repaint();
 				fdl.setModified(false);
 			}});
 	}
+	
+	public void setPreferences(JMenuItem smPref) {
+		FetalListeners fl = this;
+		smPref.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				prefWindow = new SetupWindowView(fl);
+				smc.preferncesMenu(prefWindow);
+			}});
+	}
+	
+	public void setWorkspace(JButton swp) {
+		swp.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					smc.setWorkspace(prefWindow);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}});
+	}
+	
+	public void setupWindowClose(JButton close) {
+		close.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				smc.closeSetup(prefWindow);
+			}});
+	}
+	public void setEnvironment(JMenuItem smEnv) {
+		FetalListeners fl = this;
+		smEnv.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				smc.saveEnvironment(fl);
+			}});
+	}
 }

@@ -46,8 +46,6 @@ public class MainWindowView extends JFrame {
 		RTextScrollPane sp = new RTextScrollPane(mainEditor);
 		sp.setLineNumbersEnabled(true);
 
-		//TextLineNumber tln = new TextLineNumber((Jcomponent)mainEditor);
-
 		FetalListeners fl = new FetalListeners(this, mainEditor);
 	
 		JMenuBar mainMenuBar = new JMenuBar();
@@ -58,6 +56,7 @@ public class MainWindowView extends JFrame {
 		mainMenuBar.add(buildFileMenu(fl, mainEditor));
 		mainMenuBar.add(buildEditMenu(fl, mainEditor));
 		mainMenuBar.add(buildExecMenu(fl, mainEditor, mainWindow));
+		mainMenuBar.add(this.buildSetupMenu(fl));
 		
 		buildPopUpMenu(fl, mainEditor);
 
@@ -170,11 +169,24 @@ public class MainWindowView extends JFrame {
 
 		return execMenu;
 	}
+	public JMenu buildSetupMenu(FetalListeners fl ) {
+		JMenu setupMenu = new JMenu("Setup");
+		JMenuItem smPref = new JMenuItem("Preferences");
+		JMenuItem smEnv = new JMenuItem("Setup Script Environment");
+		setupMenu.add(smPref);
+		setupMenu.add(smEnv);
+		
+		fl.setPreferences(smPref);
+		fl.setEnvironment(smEnv);
+		
+		return setupMenu;
+	}
+	
 	private  RSyntaxTextArea buildSyntaxEditor() throws IOException {
 		
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory)TokenMakerFactory.getDefaultInstance();
-		atmf.putMapping("text/fetal", "org.fife.ui.rsyntaxtextarea.modes.FetalTokenMaker");
+		atmf.putMapping("text/fetal", "org.fife.ui.rsyntaxtextarea.modes.FetalJFlexTokenMaker");
 		textArea.setSyntaxEditingStyle("text/fetal");
 		Theme theme = Theme.load(getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/eclipse.xml"));
 		theme.apply(textArea);

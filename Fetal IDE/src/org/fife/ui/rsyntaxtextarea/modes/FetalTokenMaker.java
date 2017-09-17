@@ -23,7 +23,7 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 	//private Pattern dateStr = Pattern.compile("^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$");
 	//	private Pattern decimalStr = Pattern.compile("/^(?!-0?(\\.0+)?$)-?(0|[1-9]\\d*)?(\\.\\d+)?(?<=\\d)$/");
 	private final String separators = "{}();";
-	protected final String operators = "=|><&";
+	protected final String operators = "=|><&!%^+";
 
 	protected final String separators2 = ".,;";			// Characters you don't want syntax highlighted but separate identifiers.
 	protected final String shellVariables = "#-?$!*@_";	// Characters that are part of "$<char>" shell variables; e.g., "$_".
@@ -335,6 +335,29 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 								currentTokenType = Token.OPERATOR;
 							}
 							break;
+							
+						case '-':
+
+							if (nextChar == '=' ) {
+								currentTokenType = Token.OPERATOR;
+							}
+							break;
+							
+						case '*':
+
+							if (nextChar == '=' ) {
+								currentTokenType = Token.OPERATOR;
+							}
+							break;
+							
+						case '%':
+							currentTokenType = Token.OPERATOR;
+							break;
+							
+						case '^':
+							currentTokenType = Token.OPERATOR;
+							break;
+							
 						case '/':
 
 							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
@@ -389,7 +412,7 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 
 				default: // Should never happen
 				case Token.IDENTIFIER:
-
+					char next = array[i+1];
 					switch (c) {
 
 						case ' ':
@@ -397,12 +420,6 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 							addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
 							currentTokenType = Token.WHITESPACE;
-							break;
-
-						case '/': // Special-case to colorize commands like "echo" in "/bin/echo"
-							addToken(text, currentTokenStart,i, Token.IDENTIFIER, newStartOffset+currentTokenStart);
-							currentTokenStart = i+1;
-							currentTokenType = Token.NULL;
 							break;
 
 						case '`': // Don't need to worry about backslashes as previous char is space.
@@ -421,17 +438,54 @@ public class FetalTokenMaker extends AbstractTokenMaker {
 
 
 						case '=': // Special case here; when you have "identifier=<value>" in shell, "identifier" is a variable.
-							addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
-							addToken(text, i,i, Token.OPERATOR, newStartOffset+i);
-							currentTokenType = Token.NULL;
+							//addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+							//addToken(text, i,i, Token.OPERATOR, newStartOffset+i);
+							//currentTokenType = Token.NULL;
+							currentTokenType = Token.OPERATOR;
 							break;
 
 						case '+':
-							char next = array[i+1];
+
 							if (next == '=' ) {
 								currentTokenType = Token.OPERATOR;
 							}
 							break;
+							
+						case '%':
+
+							if (next == '=' ) {
+								currentTokenType = Token.OPERATOR;
+							}
+							break;
+							
+						case '^':
+
+							if (next == '=' ) {
+								currentTokenType = Token.OPERATOR;
+							}
+							break;
+							
+						case '*':
+
+							if (next == '=' ) {
+								currentTokenType = Token.OPERATOR;
+							}
+							break;
+							
+						case '/':
+
+							if (next == '=' ) {
+								currentTokenType = Token.OPERATOR;
+							}
+							break;
+							
+						case '-':
+
+							if (next == '=' ) {
+								currentTokenType = Token.OPERATOR;
+							}
+							break;
+							
 						default:
 							if (RSyntaxUtilities.isLetterOrDigit(c) || c=='/' || c=='_') {
 								break;	// Still an identifier of some type.

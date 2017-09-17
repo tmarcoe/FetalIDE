@@ -28,6 +28,7 @@ import com.xml.ScriptSetupFile;
 public class ExecuteMenuController {
 	private Semaphore semaphore = null;
 	private TransactionService trans = null;
+	@SuppressWarnings("unused")
 	private JButton xmNext = null;
 	private StepWindowView swv=null;
 	private RSyntaxTextArea editor = null;

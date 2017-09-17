@@ -154,7 +154,7 @@ import org.fife.ui.rsyntaxtextarea.*;
       //zzStartRead = zzEndRead = s.offset;   
       zzStartRead = s.offset;   
       zzEndRead = zzStartRead + s.count - 1;   
-      zzCurrentPos = zzMarkedPos = zzPushbackPos = s.offset;   
+      zzCurrentPos = zzMarkedPos = s.offset;   
       zzLexicalState = YYINITIAL;   
       zzReader = reader;   
       zzAtBOL  = true;   
@@ -164,17 +164,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 %}   
    
 Letter                     = [A-Za-z]   
-Digit                     = ([0-9])   
-AnyCharacterButApostropheOrBackSlash   = ([^\\'])   
+Digit                     = ([0-9])    
 AnyCharacterButDoubleQuoteOrBackSlash   = ([^\\\"\n])   
 NonSeparator                  = ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")   
 IdentifierStart               = ({Letter}|"_")   
 IdentifierPart                  = ({IdentifierStart}|{Digit})   
 WhiteSpace            = ([ \t\f]+)   
    
-CharLiteral               = ([\']({AnyCharacterButApostropheOrBackSlash})[\'])   
-UnclosedCharLiteral         = ([\'][^\'\n]*)   
-ErrorCharLiteral         = ({UnclosedCharLiteral}[\'])   
+ 
 StringLiteral            = ([\"]({AnyCharacterButDoubleQuoteOrBackSlash})*[\"])   
 UnclosedStringLiteral      = ([\"]([\\].|[^\\\"])*[^\"]?)   
 ErrorStringLiteral         = ({UnclosedStringLiteral}[\"])   
@@ -190,14 +187,17 @@ Separator               = ([\(\)\{\}\[\]])
 Separator2            = ([\;,.])   
    
 Identifier            = ({IdentifierStart}{IdentifierPart}*)   
-   
+
+Function              = ({Identifier}"."{Identifier})  
 %state MLC   
    
 %%   
    
 <YYINITIAL> {   
    
-   /* Keywords */   
+   /* Keywords */
+	"begin" |
+	"end" |   
 	"getBalance" |   
 	"getVariableType" |   
 	"getDescription" |   
@@ -215,7 +215,9 @@ Identifier            = ({IdentifierStart}{IdentifierPart}*)
 	"alias" |   
 	"mapFile" |   
 	"update" |   
-    "print" |   
+    "print" | 
+    "true" |
+    "false" |  
     "if" |   
 	"else"      { addToken(Token.RESERVED_WORD); }   
    
@@ -235,9 +237,9 @@ Identifier            = ({IdentifierStart}{IdentifierPart}*)
    {WhiteSpace}            { addToken(Token.WHITESPACE); }   
    
    /* String/Character literals. */   
-   {CharLiteral}            { addToken(Token.LITERAL_CHAR); }   
-   {UnclosedCharLiteral}      { addToken(Token.ERROR_CHAR); addNullToken(); return firstToken; }   
-   {ErrorCharLiteral}         { addToken(Token.ERROR_CHAR); }   
+
+ 
+
    {StringLiteral}            { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }   
    {UnclosedStringLiteral}      { addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }   
    {ErrorStringLiteral}      { addToken(Token.ERROR_STRING_DOUBLE); }   
@@ -249,11 +251,10 @@ Identifier            = ({IdentifierStart}{IdentifierPart}*)
    /* Separators. */   
    {Separator}               { addToken(Token.SEPARATOR); }   
    {Separator2}            { addToken(Token.IDENTIFIER); }   
-   
+   {Function}              { addToken(Token.FUNCTION); }
    /* Operators. */   
-   "!" | "%" | "%=" | "&" | "&&" | "*" | "*=" | "+" | "++" | "+=" | "," | "-" | "--" | "-=" |   
-   "/" | "/=" | ":" | "<" | "<<" | "<<=" | "=" | "==" | ">" | ">>" | ">>=" | "?" | "^" | "|" |   
-   "||" | "~"      { addToken(Token.OPERATOR); }   
+   "%" | "%=" | "&" | "&&" | "*" | "*=" | "+" | "+=" | "-" | "-=" | "^=" | "<=" | "=>" | "!=" |  
+   "/" | "/=" | ":" | "<" | "=" | "==" | ">" | "^" | "|" | "||"  | "^^"    { addToken(Token.OPERATOR); }   
    
    /* Numbers */   
    {IntegerLiteral}         { addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }   
