@@ -45,5 +45,35 @@ public class SetupMenuController extends JFrame {
 	public void saveEnvironment(FetalListeners fl) {
 		new EnvironmentWindowView().xmlEditor();
 	}
+	
+	public void setupProps(SetupWindowView prefWindow) throws IOException {
+		JFileChooser fc = new JFileChooser();
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int result = fc.showSaveDialog(prefWindow);
+		
+		if (result == JFileChooser.APPROVE_OPTION) {
+			FileOutputStream fos = new FileOutputStream(propFile);
+			File dir = fc.getSelectedFile();
+			String propDir = dir.getAbsolutePath();
+			propDir = pathToURL(propDir);
+			
+
+			prop.setProperty("setup", propDir);
+			
+			prefWindow.getpFile().setText(propDir);
+			prop.store(fos, "Changed by Java program");
+		}
+		
+	}
+	private String pathToURL(String path) {
+		String urlStr = "";
+		int ndxOf = path.indexOf("C:\\");
+		
+		path = path.substring(ndxOf + 2);
+		
+		urlStr =  path.replace(File.separatorChar, '/');
+		
+		return urlStr;
+	}
 
 }

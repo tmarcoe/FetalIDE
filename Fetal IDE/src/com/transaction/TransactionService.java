@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -31,6 +31,7 @@ import com.ftl.helper.BailErrorStrategy;
 import com.ftl.helper.FetalErrorListener;
 import com.ftl.helper.FetalTransaction;
 
+
 public class TransactionService extends FetalTransaction {
 
 	@Override
@@ -40,7 +41,11 @@ public class TransactionService extends FetalTransaction {
 
 	@Override
 	public void commitTrans() {
-		System.out.println("end");
+		if (getErrorCount() > 0 ) {
+			rollback();
+		}else {
+			System.out.println("end");
+		}
 
 	}
 
@@ -52,49 +57,49 @@ public class TransactionService extends FetalTransaction {
 
 	@Override
 	public void credit(Double amount, String account) {
-		account = this.getMap(account);
+
 		System.out.printf("credit( %.02f , %s )%n", amount, account);
 
 	}
 
 	@Override
 	public void debit(Double amount, String account) {
-		account = this.getMap(account);
+
 		System.out.printf("debit( %.02f , %s )%n", amount, account);
 
 	}
 
 	@Override
 	public void ledger(char type, Double amount, String account, String description) {
-		account = this.getMap(account);
+
 		System.out.printf("ledger( %C, %.02f, %s, %s )%n", type, amount, account, description);
 
 	}
 
 	@Override
 	public double getBalance(String account) {
-		account = this.getMap(account);
+
 		System.out.printf("getBalance( %s )%n", account );
 		return 0;
 	}
 
 	@Override
 	public Object lookup(String sql, Object... args) {
-		sql = translateFormat(sql);
+
 		System.out.printf("lookup( " +sql+" )%n", args);
 		return null;
 	}
 
 	@Override
 	public void update(String sql, Object... args) {
-		sql = translateFormat(sql);
+		
 		System.out.printf("update( " + sql + " )%n", args);
 
 	}
 
 	@Override
-	public List<Object> list(String sql, Object... args) {
-		sql = translateFormat(sql);
+	public Set<Object> list(String sql, Object... args) {
+
 		System.out.printf("list( " + sql + " )%n", args);
 		return null;
 	}
@@ -173,9 +178,9 @@ public class TransactionService extends FetalTransaction {
 		FetalParser parser = new FetalParser(tokens);
 		setfParser(parser);
 
+		parser.removeErrorListeners(); // remove ConsoleErrorListener
+		parser.addErrorListener(new FetalErrorListener()); // add ours
 		if (isDebugMode() == false) {
-			parser.removeErrorListeners(); // remove ConsoleErrorListener
-			parser.addErrorListener(new FetalErrorListener()); // add ours
 			parser.setErrorHandler(new BailErrorStrategy());
 		}
 		try {
@@ -189,6 +194,21 @@ public class TransactionService extends FetalTransaction {
 			throw new RuntimeException(getErrMsg());
 
 		}
+	}
+
+	@Override
+	public void commitStock(Set<?> items) {
+		System.out.printf("Commiting %d items %n",items.size());
+	}
+
+	@Override
+	public void depleteStock(Set<?> items) {
+		System.out.printf("Depleting %d items %n",items.size());		
+	}
+
+	@Override
+	public void addStock(String sku, Long qty) {
+		System.out.printf("addStock( %s, %d ) %n", sku, qty);
 	}
 
 

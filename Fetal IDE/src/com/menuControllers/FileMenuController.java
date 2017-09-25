@@ -12,10 +12,12 @@ import java.util.Properties;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.utils.PropertiesFile;
+import com.views.MainWindowView;
 
 public class FileMenuController extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -40,18 +42,29 @@ public class FileMenuController extends JFrame {
 		}
 	}
 
-	public void openFile(JFrame mainWindow, RSyntaxTextArea mainEditor) throws IOException {
+	public boolean openFile(MainWindowView mainWindow, RSyntaxTextArea mainEditor, boolean modified) throws IOException {
+		String msg = "Are you sure you want to discard your changes and open another file?";
+		String titleBar = "File Not Saved!";
+
 		JFileChooser fc = new JFileChooser();
 		Properties prop = PropertiesFile.getProperties(propFile);
 		String workspace = prop.getProperty("workspace");
-	
+		fc.setFileFilter(new FileNameExtensionFilter("Transaction Files","trans"));
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("Coupon files","cpn"));
 		if (lastDir != null) {
 			fc.setCurrentDirectory(lastDir);
 		}else {
 			if (workspace != null)
 				fc.setCurrentDirectory(new File(workspace));
 		}
+		if (modified) {
+			int result = JOptionPane.showConfirmDialog(null, msg, titleBar, JOptionPane.YES_NO_OPTION);
+			if (result == JOptionPane.NO_OPTION) {
+				return false;
+			}
 
+		}
+		
 		int result = fc.showOpenDialog(mainWindow);
 
 		if (result == JFileChooser.APPROVE_OPTION) {
@@ -67,9 +80,9 @@ public class FileMenuController extends JFrame {
 				editBuffer += line + "\n";
 			}
 			mainEditor.setText(editBuffer);
-			//mainEditor.getVertical().setValue(0);
+	
 		}
-
+		return true;
 	}
 
 	public boolean saveFile(JFrame mainWindow, RSyntaxTextArea mainEditor) throws IOException {

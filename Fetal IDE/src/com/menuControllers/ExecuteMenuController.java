@@ -6,6 +6,7 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
@@ -22,6 +23,7 @@ import com.ftl.events.StepEvent;
 import com.ftl.events.StepEventListener;
 import com.ftl.helper.Variable;
 import com.transaction.TransactionService;
+import com.utils.PropertiesFile;
 import com.views.StepWindowView;
 import com.xml.ScriptSetupFile;
 
@@ -37,6 +39,7 @@ public class ExecuteMenuController {
 	private String openFile;
 	private static PrintStream stdOut;
 	private static PrintStream stdErr;
+	private final String propFile = "resources/config/ide.properties";
 
 	public void runApp(String editText, String openFile) throws Exception {
 		this.openFile = openFile;
@@ -81,10 +84,12 @@ public class ExecuteMenuController {
 	class RunApplication {
 
 		public void run(String editText, Semaphore semaphore) throws Exception {
+			Properties prop = PropertiesFile.getProperties(propFile);
+			
 			trans = new TransactionService();
 			ScriptSetupFile setup = new ScriptSetupFile();
 			setup.readFile(openFile, trans);
-			trans.initTransaction("file:///home/donzalma/public_html/config/fetal.properties", semaphore);
+			trans.initTransaction("file://" + prop.getProperty("setup") + "/fetal.properties", semaphore);
 
 			if (semaphore != null) {
 				StepListener stepListner = new StepListener();
@@ -134,18 +139,19 @@ public class ExecuteMenuController {
 			@SuppressWarnings("resource")
 			@Override
 			protected Void doInBackground() throws Exception {
-				String line = "";
+				
 				Scanner s = new Scanner(errPipe);
                 while (s.hasNextLine()){
-                    line += s.nextLine() + '\n';
+                    String line = s.nextLine() + '\n';
                     publish(line);
+
                 }
 				return null;
 			}
             @Override
             protected void process(List<String> chunks) {
                 for (String line : chunks){
-                    area.setText(line);
+                    area.append(line);
                 }
             }		
 		}.execute();
@@ -156,7 +162,7 @@ public class ExecuteMenuController {
     	area.setForeground(Color.BLACK);
         final PipedInputStream outPipe = new PipedInputStream();
         PrintStream printStream = new PrintStream(new PipedOutputStream(outPipe), true);
-        
+
         stdOut = System.out;
         System.setOut(printStream);
         new SwingWorker<Void, String>() {
@@ -175,7 +181,7 @@ public class ExecuteMenuController {
             @Override
             protected void process(List<String> chunks) {
                 for (String line : chunks){
-                    area.setText(line);
+                    area.append(line);
                 }
             }
         }.execute();
@@ -195,10 +201,8 @@ public class ExecuteMenuController {
 				editor.removeAllLineHighlights();
 				editor.addLineHighlight((trans.getLineNum() - 1), new Color(250,178,185));
 			} catch (BadLocationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//editor.getPainter().HighlightLine(editor.getGraphics(), trans.getLineNum(), trans.getPrevLine());
 		}
     	
     }

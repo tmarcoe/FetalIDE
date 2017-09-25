@@ -8,6 +8,7 @@
 				<field name="shipping_cost" type="decimal" value="240.0" />
 				<field name="added_charges" type="decimal" value="0.0" />
 			</var>
+			<var name="receipt" type="object" value="com.peachy.helper.TestReceipt" />
 		</variables>
 		<description value="Internet Purchase" />
 	</file>
@@ -37,6 +38,8 @@
 			<var name="order" type="dao" value="com.peachy.entity.PurchaseOrder">
 				<field name="price" type="decimal" value="10000.00" />
 				<field name="tax" type="decimal" value="100" />
+				<field name="skuNum" type="String" value="0099557009" />
+				<field name="qty" type="number" value="25" />
 			</var>
 		</variables>
 		<description value="Purchase Invetory" />
@@ -59,6 +62,11 @@
 				<field name="retirePrcnt" type="decimal" value="20.00" />
 			</var>
 			<var name="grossWage" type="decimal" value="100000.00"/>
+		</variables>
+	</file>
+	<file name="aftershipping.trans" >
+		<variables>
+			<var name="receipt" type="object" value="com.peachy.helper.TestReceipt" />
 		</variables>
 	</file>
 	<file name="buyonehalfoff.cpn" >

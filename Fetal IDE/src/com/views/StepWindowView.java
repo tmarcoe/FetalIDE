@@ -4,16 +4,19 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.actionListeners.FetalListeners;
@@ -42,7 +45,9 @@ public class  StepWindowView extends JFrame {
 		stepWindow.setLayout(new BorderLayout());
 		Container cp = stepWindow.getContentPane();
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridLayout(16,1));
+
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+		
 		buttonPanel.setBackground(new Color(240,240,255));
 		buttonPanel.setPreferredSize(new Dimension(100,100));
 		buttonPanel.setBorder(BorderFactory.createTitledBorder("Dashboard"));
@@ -57,10 +62,10 @@ public class  StepWindowView extends JFrame {
 		buttonPanel.add(next);
 		buttonPanel.add(close);
 		buttonPanel.add(hasTreeView);
-		cp.add(buttonPanel, BorderLayout.LINE_END);
-		varDisplay = newWindow(cp, new Dimension(700,100), BorderLayout.CENTER, "Variables");
-		outDisplay = newWindow(cp, new Dimension(800,100), BorderLayout.PAGE_END, "Output");
-		
+		cp.add(buttonPanel, BorderLayout.EAST);
+		varDisplay = newWindow(cp, new Dimension(700,410), BorderLayout.CENTER, "Variables", true);
+		outDisplay = newWindow(cp, new Dimension(800,50), BorderLayout.SOUTH, "Output", false);
+
 		stepWindow.setAlwaysOnTop(true);
 		stepWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		stepWindow.pack();
@@ -74,19 +79,23 @@ public class  StepWindowView extends JFrame {
 		return stepWindow;
 		
 	}
-	private JTextArea newWindow(Container cp,  Dimension size, String layout, String title) {
+	private JTextArea newWindow(Container cp,  Dimension size, String layout, String title, boolean scrollable) {
 
 		JTextArea textArea = new JTextArea();
-		/*
-		JScrollPane vScroll = new JScrollPane(textArea, 
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, 
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		*/
-		textArea.setPreferredSize(size);
-		textArea.setBorder(BorderFactory.createTitledBorder(title));
+		
+		if (scrollable == true) {
+			JScrollPane vScroll = new JScrollPane(textArea, 
+					ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, 
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-		cp.add(textArea, layout);
+			textArea.setPreferredSize(size);
+			textArea.setBorder(BorderFactory.createTitledBorder(title));
 
+			cp.add(vScroll, layout);
+		}else {
+			textArea.setBorder(BorderFactory.createTitledBorder(title));
+			cp.add(textArea, layout);
+		}
 		
 		return textArea;
 	}
@@ -125,7 +134,7 @@ public class  StepWindowView extends JFrame {
 	
 	private Dimension scaleScreenSize(Dimension d, double percent) {
 
-		d.height *= (percent / 100);
+		d.height *= (percent / 70);
 		d.width *= (percent / 100);
 		
 		return d;

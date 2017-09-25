@@ -31,6 +31,7 @@ public class MainWindowView extends JFrame {
 	private JMenuItem emUndo;
 	private JMenuItem emRedo;
 	private JTextPane status;
+	private RTextScrollPane sp;
 	
 	public void MainView() throws IOException {
 		JPanel statusBar = new JPanel();
@@ -43,7 +44,7 @@ public class MainWindowView extends JFrame {
 		RSyntaxTextArea mainEditor = buildSyntaxEditor();
 		
 		
-		RTextScrollPane sp = new RTextScrollPane(mainEditor);
+		sp = new RTextScrollPane(mainEditor);
 		sp.setLineNumbersEnabled(true);
 
 		FetalListeners fl = new FetalListeners(this, mainEditor);
@@ -218,6 +219,10 @@ public class MainWindowView extends JFrame {
 
 	public JTextPane getStatus() {
 		return status;
+	}
+
+	public RTextScrollPane getSp() {
+		return sp;
 	}
 
 	

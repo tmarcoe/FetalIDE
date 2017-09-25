@@ -216,6 +216,9 @@ Function              = ({Identifier}"."{Identifier})
 	"mapFile" |   
 	"update" |   
     "print" | 
+    "depleteStock" |
+    "commitStock" |
+    "addStock" |
     "true" |
     "false" |  
     "if" |   

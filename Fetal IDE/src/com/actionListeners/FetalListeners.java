@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -63,18 +64,22 @@ public class FetalListeners extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				boolean done = false;
 				try {
-					fmc.openFile(mainWindow, mainEditor);
-					mainEditor.discardAllEdits();
-					mainWindow.getEmUndo().setEnabled(false);
-					mainWindow.getEmUndo().setText("Can't undo");
-					mainWindow.getEmRedo().setEnabled(false);
-					mainWindow.getEmRedo().setText("Can't undo");
-					if (fmc.getLastSaveFile() != null) {
-						openFile = fmc.getLastSaveFile().getName();
-						mainWindow.getStatus().setText(openFile);
+					done = fmc.openFile(mainWindow, mainEditor, fdl.isModified());
+					if (done == true ) {
+						mainEditor.discardAllEdits();
+						mainWindow.getEmUndo().setEnabled(false);
+						mainWindow.getEmUndo().setText("Can't undo");
+						mainWindow.getEmRedo().setEnabled(false);
+						mainWindow.getEmRedo().setText("Can't undo");
+						if (fmc.getLastSaveFile() != null) {
+							openFile = fmc.getLastSaveFile().getName();
+							mainWindow.getStatus().setText(openFile);
+						}
+
+						fdl.setModified(false);
 					}
-					fdl.setModified(false);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -88,10 +93,19 @@ public class FetalListeners extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				fdl.setModified(false);
-				fmc.newFile(mainEditor);
-				openFile = null;
-				mainWindow.getStatus().setText("");
+				String msg = "Are you sure you want to discard your changes?";
+				String titleBar = "File Not Saved!";
+				if (fdl.isModified() == true) {
+					if(JOptionPane.showConfirmDialog(null, msg, titleBar, JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)  {
+						return;
+					}
+				}
+					
+					fmc.newFile(mainEditor);
+					fdl.setModified(false);
+					openFile = null;
+					mainWindow.getStatus().setText("");
+				
 			}});
 		
 	}
@@ -324,6 +338,18 @@ public class FetalListeners extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				smc.saveEnvironment(fl);
+			}});
+	}
+	public void setFTLSetup(JButton setup) {
+		setup.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					smc.setupProps(prefWindow);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}});
 	}
 }

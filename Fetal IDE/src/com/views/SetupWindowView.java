@@ -19,12 +19,18 @@ public class SetupWindowView extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private FetalListeners fl;
 	private JTextField path;
+	private JTextField pFile;
 	private final String propFile = "resources/config/ide.properties";
 	private Properties prop = PropertiesFile.getProperties(propFile);
 	
 	public JTextField getPath() {
 		return path;
 	}
+	
+	public JTextField getpFile() {
+		return pFile;
+	}
+
 	public SetupWindowView(FetalListeners fl) throws HeadlessException {
 		super();
 		this.fl = fl;
@@ -40,14 +46,24 @@ public class SetupWindowView extends JFrame {
 		path.setEditable(false);
 		path.setText(prop.getProperty("workspace"));
 		
+		JLabel label2 = new JLabel("Path to properties file");
+		pFile = new JTextField(30);
+		pFile.setEditable(false);
+		pFile.setText(prop.getProperty("setup"));
+		
 		JButton file = new JButton("Set Workspace");
 		JButton close = new JButton("Close");
+		JButton setup = new JButton("Set FTL Properties File");
 		fl.setWorkspace(file);
 		fl.setupWindowClose(close);
+		fl.setFTLSetup(setup);
 		
 		cp.add(label);
 		cp.add(path);
+		cp.add(label2);
+		cp.add(pFile);
 		cp.add(file);
+		cp.add(setup);
 		cp.add(close);
 		
 		
@@ -65,7 +81,7 @@ public class SetupWindowView extends JFrame {
 	
 	private Dimension scaleScreenSize(Dimension d, double percent) {
 
-		d.height *= (percent / 300);
+		d.height *= (percent / 200);
 		d.width *= (percent / 100);
 		
 		return d;
