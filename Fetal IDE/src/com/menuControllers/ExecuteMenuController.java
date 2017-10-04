@@ -24,6 +24,7 @@ import com.ftl.events.StepEventListener;
 import com.ftl.helper.Variable;
 import com.transaction.TransactionService;
 import com.utils.PropertiesFile;
+import com.views.MainWindowView;
 import com.views.StepWindowView;
 import com.xml.ScriptSetupFile;
 
@@ -40,6 +41,7 @@ public class ExecuteMenuController {
 	private static PrintStream stdOut;
 	private static PrintStream stdErr;
 	private final String propFile = "resources/config/ide.properties";
+	private MainWindowView mainWindow;
 
 	public void runApp(String editText, String openFile) throws Exception {
 		this.openFile = openFile;
@@ -50,12 +52,16 @@ public class ExecuteMenuController {
 		ra.run(editText, null);
 	}
 	
-	public void stepApp(String editText, StepWindowView stepWindow, FetalDocumentListener fdl, RSyntaxTextArea mainEditor, String openFile) throws IOException {
+	public void stepApp(String editText, StepWindowView stepWindow, FetalDocumentListener fdl, 
+						RSyntaxTextArea mainEditor, String openFile, MainWindowView mainWindow) throws IOException {
 		editor = mainEditor;
 		//editor.getVertical().setValue(0);
 		fetalListener = fdl;
 		this.openFile = openFile;
 		swv = stepWindow;
+		this.mainWindow = mainWindow;
+		mainWindow.getXmRun().setEnabled(false);
+		mainWindow.getXmStep().setEnabled(false);
 		errConsole(swv.getErrorWindow());
 
 		RunApplication ra = new RunApplication();
@@ -117,7 +123,8 @@ public class ExecuteMenuController {
 					System.setErr(stdErr);
 					stdErr = null;
 				}
-
+				mainWindow.getXmRun().setEnabled(true);
+				mainWindow.getXmStep().setEnabled(true);
 				if (swv != null) {
 					editor.removeAllLineHighlights();
 					swv.getClose().setVisible(true);

@@ -247,7 +247,7 @@ public class FetalListeners extends JFrame {
 		});		
 	}
 	
-	public void setStep(JMenuItem stp, RSyntaxTextArea mainEditor, JFrame mainWindow) {
+	public void setStep(JMenuItem stp, RSyntaxTextArea mainEditor, MainWindowView mainWindow) {
 		FetalListeners fl = this;
 		stp.addActionListener(new ActionListener() {
 
@@ -259,7 +259,7 @@ public class FetalListeners extends JFrame {
 						StepWindowView stepWindow = new StepWindowView(fl,mainEditor);
 						swv = stepWindow;
 						stepWindow.stepWindow();
-						xmc.stepApp(editText, stepWindow, fdl, mainEditor, openFile);
+						xmc.stepApp(editText, stepWindow, fdl, mainEditor, openFile, mainWindow);
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}

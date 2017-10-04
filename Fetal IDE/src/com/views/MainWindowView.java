@@ -31,6 +31,8 @@ public class MainWindowView extends JFrame {
 	private JMenuItem emUndo;
 	private JMenuItem emRedo;
 	private JTextPane status;
+	private JMenuItem xmRun;
+	private JMenuItem xmStep;
 	private RTextScrollPane sp;
 	
 	public void MainView() throws IOException {
@@ -156,9 +158,9 @@ public class MainWindowView extends JFrame {
 	
 	public JMenu buildExecMenu(FetalListeners fl, RSyntaxTextArea mainEditor, JFrame mainWindow) {
 		JMenu execMenu = new JMenu("Execute");
-		JMenuItem xmRun = new JMenuItem("Run");
+		xmRun = new JMenuItem("Run");
 		xmRun.setIcon(new ImageIcon("resources/image/run.png"));
-		JMenuItem xmStep = new JMenuItem("Step");
+		xmStep = new JMenuItem("Step");
 		xmStep.setIcon(new ImageIcon("resources/image/step.png"));
 
 		
@@ -166,7 +168,7 @@ public class MainWindowView extends JFrame {
 		execMenu.add(xmStep);
 		
 		fl.setRun(xmRun, mainEditor);
-		fl.setStep(xmStep, mainEditor, mainWindow);
+		fl.setStep(xmStep, mainEditor, this);
 
 		return execMenu;
 	}
@@ -223,6 +225,14 @@ public class MainWindowView extends JFrame {
 
 	public RTextScrollPane getSp() {
 		return sp;
+	}
+
+	public JMenuItem getXmRun() {
+		return xmRun;
+	}
+
+	public JMenuItem getXmStep() {
+		return xmStep;
 	}
 
 	

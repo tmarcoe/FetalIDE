@@ -46,7 +46,7 @@ public class SetupWindowView extends JFrame {
 		path.setEditable(false);
 		path.setText(prop.getProperty("workspace"));
 		
-		JLabel label2 = new JLabel("Path to properties file");
+		JLabel label2 = new JLabel("URL to properties file: ");
 		pFile = new JTextField(30);
 		pFile.setEditable(false);
 		pFile.setText(prop.getProperty("setup"));
