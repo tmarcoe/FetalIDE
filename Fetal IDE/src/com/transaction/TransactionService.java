@@ -211,5 +211,10 @@ public class TransactionService extends FetalTransaction {
 		System.out.printf("addStock( %s, %d ) %n", sku, qty);
 	}
 
+	@Override
+	public void fetalLogger(String clss, String msg) {
+		System.err.printf("Error in %s: %s%n", clss, msg);
+	}
+
 
 }
