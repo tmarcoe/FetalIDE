@@ -131,7 +131,6 @@ public class  StepWindowView extends JFrame {
 		return next;
 	}
 	
-	
 	private Dimension scaleScreenSize(Dimension d, double percent) {
 
 		d.height *= (percent / 70);

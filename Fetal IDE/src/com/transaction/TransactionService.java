@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -104,12 +105,17 @@ public class TransactionService extends FetalTransaction {
 		return null;
 	}
 	
-	public void showGuiTree(FetalParser parser, TransactionContext tree ) {
+	public void showGuiTree(FetalParser parser, TransactionContext tree, long time ) {
         JFrame frame = new JFrame("Fetal Tree");
         frame.setAlwaysOnTop(true);
         
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 10, 100, 50);
         JButton button = new JButton("Close");
+
+        JTextField execTime = new JTextField(10);
+        if (time > 0 ) {
+        	execTime.setText(String.format("Execution Time (in seconds): %.2f", (double) time / 1000000000));
+        }
         JPanel sliderPanel = new JPanel();
  
         frame.getContentPane().setLayout(new BorderLayout());
@@ -126,8 +132,10 @@ public class TransactionService extends FetalTransaction {
         
         viewr.setScale(1);//scale a little
         sliderPanel.add(slider);
+        if (time > 0) {
+        	sliderPanel.add(execTime);
+        }
         sliderPanel.add(button);
-        
         frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
         frame.getContentPane().add(sliderPanel, BorderLayout.PAGE_END);
        

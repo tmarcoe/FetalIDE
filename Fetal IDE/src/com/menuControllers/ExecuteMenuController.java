@@ -91,7 +91,6 @@ public class ExecuteMenuController {
 
 		public void run(String editText, Semaphore semaphore) throws Exception {
 			Properties prop = PropertiesFile.getProperties(propFile);
-			
 			trans = new TransactionService();
 			ScriptSetupFile setup = new ScriptSetupFile();
 			setup.readFile(openFile, trans);
@@ -103,12 +102,17 @@ public class ExecuteMenuController {
 			}
 			trans.setDebugMode(true);
 			try {
+				long startTime = System.nanoTime();
 				trans.loadRule(editText);
+				long endTime = System.nanoTime();
+				long execTime = endTime - startTime;
+				if (semaphore != null) execTime = 0;
 				FetalParser parser = trans.getfParser();
 				TransactionContext tCtx = trans.getTransCtx();
 				if (swv == null || swv.getHasTreeView().isSelected() == true) {
-					trans.showGuiTree(parser, tCtx);
+					trans.showGuiTree(parser, tCtx, execTime);
 				}
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}finally {
@@ -123,8 +127,10 @@ public class ExecuteMenuController {
 					System.setErr(stdErr);
 					stdErr = null;
 				}
-				mainWindow.getXmRun().setEnabled(true);
-				mainWindow.getXmStep().setEnabled(true);
+				if (mainWindow != null) {
+					mainWindow.getXmRun().setEnabled(true);
+					mainWindow.getXmStep().setEnabled(true);
+				}
 				if (swv != null) {
 					editor.removeAllLineHighlights();
 					swv.getClose().setVisible(true);
