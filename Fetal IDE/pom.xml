@@ -20,7 +20,7 @@
   	<dependency>
   		<groupId>com.ftl</groupId>
   		<artifactId>fetal</artifactId>
-  		<version>3.2.1</version>
+  		<version>3.3.0</version>
   	</dependency>
   	<dependency>
   		<groupId>org.mod4j.org.apache.commons</groupId>
@@ -30,7 +30,7 @@
   	<dependency>
   		<groupId>org.antlr</groupId>
   		<artifactId>antlr4</artifactId>
-  		<version>4.5.2-1</version>
+  		<version>4.7</version>
   	</dependency>
   	<dependency>
   		<groupId>apache-log4j</groupId>

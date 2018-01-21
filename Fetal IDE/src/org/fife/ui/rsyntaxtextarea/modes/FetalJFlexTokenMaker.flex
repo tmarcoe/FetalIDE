@@ -205,10 +205,13 @@ Function              = ({Identifier}"."{Identifier})
 	"getDays" |   
 	"dayOfTheWeek" |   
 	"getMonth" |   
-	"getYear" |   
+	"getYear" |
+	"getDate" |   
 	"import" |   
 	"lookup" |   
-	"list" |   
+	"list" | 
+	"insert" |
+	"delete" |  
 	"credit" |   
 	"debit" |   
 	"ledger" |   

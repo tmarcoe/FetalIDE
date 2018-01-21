@@ -114,7 +114,8 @@ public class TransactionService extends FetalTransaction {
 
         JTextField execTime = new JTextField(10);
         if (time > 0 ) {
-        	execTime.setText(String.format("Execution Time (in seconds): %.2f", (double) time / 1000000000));
+        	execTime.setEditable(false);
+        	execTime.setText(String.format("Execution Time (in seconds): %.4f", (double) time / 1000000000));
         }
         JPanel sliderPanel = new JPanel();
  
@@ -222,6 +223,16 @@ public class TransactionService extends FetalTransaction {
 	@Override
 	public void fetalLogger(String clss, String msg) {
 		System.err.printf("Error in %s: %s%n", clss, msg);
+	}
+
+	@Override
+	public void insert(String sql, Object record) {
+		System.out.printf("inert(%s , %s)%n", sql, record.toString());
+	}
+
+	@Override
+	public void delete(String sql, Object record) {
+		System.out.printf("delete(%s , %s)%n", sql, record.toString());		
 	}
 
 
