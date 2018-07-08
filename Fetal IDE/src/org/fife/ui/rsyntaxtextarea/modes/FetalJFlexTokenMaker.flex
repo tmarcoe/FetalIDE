@@ -202,11 +202,14 @@ Function              = ({Identifier}"."{Identifier})
 	"getVariableType" |   
 	"getDescription" |   
 	"today" |   
-	"getDays" |   
+	"getDays" | 
+	"getHours" |
+	"getMinutes" |  
 	"dayOfTheWeek" |   
 	"getMonth" |   
 	"getYear" |
-	"getDate" |   
+	"getDate" | 
+	"truncateTime" |  
 	"import" |   
 	"lookup" |   
 	"list" | 
@@ -219,9 +222,19 @@ Function              = ({Identifier}"."{Identifier})
 	"mapFile" |   
 	"update" |   
     "print" | 
-    "depleteStock" |
-    "commitStock" |
-    "addStock" |
+    "fv"	|
+    "pv"	|
+    "round" |
+    "roundUp" |
+    "roundDown" |
+    "roundTo" |
+    "absDecimal" |
+    "absNumeric" |
+    "getBookValue" |
+    "nextDate"	|
+    "merge"	|
+    "commitStock"	|
+    "depleteStock"	|
     "true" |
     "false" |  
     "if" |   

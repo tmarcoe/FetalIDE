@@ -206,33 +206,37 @@ public class TransactionService extends FetalTransaction {
 	}
 
 	@Override
-	public void commitStock(Set<?> items) {
-		System.out.printf("Commiting %d items %n",items.size());
-	}
-
-	@Override
-	public void depleteStock(Set<?> items) {
-		System.out.printf("Depleting %d items %n",items.size());		
-	}
-
-	@Override
-	public void addStock(String sku, Long qty) {
-		System.out.printf("addStock( %s, %d ) %n", sku, qty);
-	}
-
-	@Override
 	public void fetalLogger(String clss, String msg) {
 		System.err.printf("Error in %s: %s%n", clss, msg);
 	}
 
 	@Override
-	public void insert(String sql, Object record) {
-		System.out.printf("inert(%s , %s)%n", sql, record.toString());
+	public void insert(Object record) {
+		System.out.printf("insert(%s)%n", record.toString());
 	}
 
 	@Override
 	public void delete(String sql, Object record) {
 		System.out.printf("delete(%s , %s)%n", sql, record.toString());		
+	}
+
+	@Override
+	public void merge(Object record) {
+		System.out.printf("merge(%s)%n", record.toString());
+	}
+
+	@Override
+	public void commitStock(Set<?> items) {
+		for (Object item : items) {
+			System.out.printf("commitStock - %s%n", item.toString());
+		}
+	}
+
+	@Override
+	public void depleteStock(Set<?> items) {
+		for (Object item : items) {
+			System.out.printf("depleteStock - %s%n", item.toString());
+		}		
 	}
 
 

@@ -1,98 +1,269 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <configs>
-	<file name="purchase.trans">
+	<file name="adjustap.trans">
 		<variables>
-			<var name="invoice" type="dao" value="com.peachy.entity.Invoice">
-				<field name="total" type="decimal" value="10000.0" />
-				<field name="shipping_cost" type="decimal" value="240.0" />
-				<field name="added_charges" type="decimal" value="0.0" />
+			<var name="payables" type="dao" value="com.efo.entity.Payables">
+				<field name="invoice_num" type="string" value="AP1423" />
+				<field name="date_begin" type="date" value="2018-02-11" />
+				<field name="type"  type="string" value="C" />
+				<field name="supplier" type="string" value="The ABC company" />
+				<field name="total_due" type="decimal" value="2000.00" />
+				<field name="date_due" type="date" value="2018-02-11" />
 			</var>
-			<var name="receipt" type="object" value="com.peachy.helper.TestReceipt" />
-		</variables>
-		<description value="Internet Purchase" />
-	</file>
-	<file name="pettycash.trans">
-		<variables>
-			<var name="transactionAmount" type="decimal" value="1000.00" />
-		</variables>
-		<description value="Petty Cash" />
-	</file>
-	<file name="payroll.trans">
-		<variables>
-			<var name="ttGrossWage" type="decimal" value="50000.00" />
-			<var name="ttlFederalTax" type="decimal" value="1500.00" />
-			<var name="ttlSsInsurance" type="decimal" value="500.00" />
-			<var name="ttlFederalUnemployment" type="decimal" value="500.00" />
-			<var name="ttlStateTax" type="decimal" value="700.00" />
-			<var name="ttlStateUmemployment" type="decimal" value="350.00" />
-			<var name="ttlGarnishments" type="decimal" value="0.00" />
-			<var name="ttlMedical" type="decimal" value="100.00" />
-			<var name="ttlRetirement" type="decimal" value="200.00" />
-			<var name="ttlOther" type="decimal" value="0.00" />
-			<var name="startingPeriod" type="date" value="2017-09-01" />
+			<var name="adjustment" type="decimal" value="-20.00" />
 		</variables>
 	</file>
-	<file name="inventory.trans">
+	<file name="adjustar.trans" >
 		<variables>
-			<var name="order" type="dao" value="com.peachy.entity.PurchaseOrder">
-				<field name="price" type="decimal" value="10000.00" />
-				<field name="tax" type="decimal" value="100" />
-				<field name="skuNum" type="String" value="0099557009" />
-				<field name="qty" type="number" value="25" />
+			<var name="receivables" type="dao" value="com.efo.entity.Receivables">
+				<field name="invoice_num" type="string" value="AR1509" />
+				<field name="invoice_date" type="date" value="2018-02-11" />
+				<field name="customer" type="string" value="Mrs. Jones" />
+				<field name="total_due" type="decimal" value="5000.00" />
+				<field name="date_due" type="date" value="2019-02-11" />
+			</var>
+			<var name="adjustment" type="decimal" value="-20.00" />
+		</variables>
+	</file>
+	<file name="ap.trans" >
+		<variables>
+			<var name="payables" type="dao" value="com.efo.entity.Payables">
+				<field name="invoice_num" type="string" value="AZ15234" />
+				<field name="date_begin" type="date" value="2018-06-23" />
+				<field name="supplier" type="string" value="SR" />
+				<field name="type" type="string" value="R" />
+				<field name="total_due" type="decimal" value="1000.00" />
+				<field name="down_payment" type="decimal" value="100.00" />
+				<field name="interest" type="decimal" value="10.00" />
+				<field name="each_payment" type="decimal" value="82.50" />
+				<field name="num_payments" type="number" value="12" />
+				<field name="schedule" type="string" value="Monthly" />
+				<field name="total_balance" type="decimal" value="1000.00" />
+			</var>
+			<var name="billed" type="dao" value="com.efo.entity.PaymentsBilled">
+				<field name="invoice_num" type="string" value="AZ15234" />
+				<field name="payment_date" type="date" value="2018-07-23" />
+				<field name="date_due" type="date" value="2018-07-23" />
+				<field name="payment_due" type="decimal" value="82.5" />
+				<field name="payment" type="decimal" value="82.5" />
+				<field name="penalties" type="decimal" value="0.0" />
 			</var>
 		</variables>
-		<description value="Purchase Invetory" />
 	</file>
-	<file name="adjustment.trans">
+	<file name="ar.trans" >
 		<variables>
-			<var name="adjustment" type="decimal" value="1000.00" />
-		</variables>
-		<description value="Adjustment" />
-	</file>
-	<file name="payment.trans">
-		<variables>
-			<var name="employee" type="dao" value="com.peachy.entity.Employee">
-				<field name="FTaxPrcnt" type="decimal" value="35.0" />
-				<field name="STaxPrcnt" type="decimal" value="0.0" />
-				<field name="FUnPrcnt" type="decimal" value="0.0" />
-				<field name="SUnPrcnt" type="decimal" value="0.0" />
-				<field name="medPrcnt" type="decimal" value="0.0" />
-				<field name="ssiPrcnt" type="decimal" value="0.0" />
-				<field name="retirePrcnt" type="decimal" value="20.00" />
+			<var name="receivables" type="dao" value="com.efo.entity.Receivables">
+				<field name="invoice_num" type="string" value="AR1509" />
+				<field name="invoice_date" type="date" value="2018-02-11" />
+				<field name="customer" type="string" value="Mrs. Jones" />
+				<field name="total_due" type="decimal" value="5000.00" />
+				<field name="date_due" type="date" value="2019-02-11" />
 			</var>
-			<var name="grossWage" type="decimal" value="100000.00"/>
 		</variables>
 	</file>
-	<file name="aftershipping.trans" >
+	<file name="replenishpc.trans">
 		<variables>
-			<var name="receipt" type="object" value="com.peachy.helper.TestReceipt" />
+			<var name="pettyCash" type="dao" value="com.efo.entity.PettyCash" />
+			<var name="pcAmount" type="decimal" value="400.00" />
 		</variables>
 	</file>
-	<file name="buyonehalfoff.cpn" >
+	<file name="pcdisbursement.trans" >
 		<variables>
-			<var name="item" type="string" value="0099557009" />
-			<var name="couponValid" type="boolean" value="false" />
-			<var name="receipt" type="object" value="com.peachy.helper.TestReceipt" />
-			<var name="couponValue" type="decimal" value="0.00"/>
-			<var name="couponTax" type="decimal" value="0.00" />
+			<var name="pettyCashVoucher" type="dao" value="com.efo.entity.PettyCashVoucher" >
+				<field name="timeStamp" type="date" value="2018-06-01" />
+				<field name="recipient" type="string" value="Kinkos" />
+				<field name="fromAccount" type="string" value="Petty Cash (Office Supplies)" />
+				<field name="amount" type="decimal" value="27.00" />
+			</var>
 		</variables>
 	</file>
-	<file name="buyonetakeone.cpn" >
+	<file name="pcadjustment.trans" >
 		<variables>
-			<var name="item" type="string" value="0099557009" />
-			<var name="couponValid" type="boolean" value="false" />
-			<var name="receipt" type="object" value="com.peachy.helper.TestReceipt" />
-			<var name="couponValue" type="decimal" value="0.00"/>
-			<var name="couponTax" type="decimal" value="0.00" />
+			<var name="pettyCashVoucher" type="dao" value="com.efo.entity.PettyCashVoucher" >
+				<field name="timeStamp" type="date" value="2018-06-01" />
+				<field name="recipient" type="string" value="Kinkos" />
+				<field name="fromAccount" type="string" value="Petty Cash (Office Supplies)" />
+				<field name="amount" type="decimal" value="0.00" />
+			</var>
+			<var name="adjustAmount" type="decimal" value="-10.00" />
 		</variables>
 	</file>
-	<file name="welcome.cpn" >
+	<file name="paymentpaid.trans" >
 		<variables>
-			<var name="couponValid" type="boolean" value="false" />
-			<var name="receipt" type="object" value="com.peachy.helper.TestReceipt" />
-			<var name="couponValue" type="decimal" value="0.00"/>
-			<var name="couponTax" type="decimal" value="0.00" />
+			<var name="payables" type="dao" value="com.efo.entity.Payables">
+				<field name="invoice_num" type="string" value="AP1423" />
+				<field name="date_begin" type="date" value="2018-02-11" />
+				<field name="type"  type="string" value="C" />
+				<field name="supplier" type="string" value="The ABC company" />
+				<field name="total_due" type="decimal" value="2000.00" />
+				<field name="total_balance" type="decimal" value="0.0" />
+			</var>
+			<var name="payment" type="dao" value="com.efo.entity.PaymentsBilled">
+				<field name="invoice_num" type="string" value="AP1423" />
+				<field name="payment_date" type="date" value="2018-02-11" />
+				<field name="date_due" type="date" value="2018-02-11" />
+				<field name="payment_due" type="decimal" value="100.00" />
+				<field name="payment" type="decimal" value="100.00" />
+			</var>
+		</variables>
+	</file>
+	<file name="paymentreceived.trans" >
+		<variables>
+			<var name="receivable" type="dao" value="com.efo.entity.Receivables">
+				<field name="invoice_num" type="number" value="1509" />
+				<field name="invoice_date" type="date" value="2018-02-11" />
+				<field name="customer" type="string" value="Mrs. Jones" />
+				<field name="total_due" type="decimal" value="5000.00" />
+				<field name="total_balance" type="decimal" value="5000.00" />
+			</var>
+			<var name="payment" type="dao" value="com.efo.entity.PaymentsReceived">
+				<field name="invoice_num" type="number" value="1509" />
+				<field name="payment_date" type="date" value="2018-02-11" />
+				<field name="date_due" type="date" value="2018-02-11" />
+				<field name="payment_due" type="decimal" value="100.00" />
+				<field name="payment" type="decimal" value="100.00" />
+			</var>
+		</variables>
+	</file>
+	<file name="transferpc.trans" >
+		<variables>
+			<var name="pettyCash" type="dao" value="com.efo.entity.PettyCashVoucher" >
+				<field name="timeStamp" type="date" value="2018-06-01" />
+				<field name="recipient" type="string" value="Kinkos" />
+				<field name="fromAccount" type="string" value="Petty Cash (Office Supplies)" />
+				<field name="amount" type="decimal" value="27.5" />
+			</var>
+			<var name="toAccount" type="string" value="Petty Cash (General Office Expense)" />
+		</variables>
+	</file>
+	<file name="orderinventory.trans" >
+		<variables>
+			<var name="order" type="dao" value="com.efo.entity.ProductOrders" >
+				<field name="invoice_num" type="string" value="56432" /> 
+				<field name="order_date" type="date" value="2018-06-14" />
+				<field name="payment_type" type="string" value="Credit" />
+				<field name="amt_ordered" type="decimal" value="10.00" />
+				<field name="sku" type="string" value="638609117647" />
+				<field name="vendor" type="string" value="San Miguel" />
+				<field name="wholesale" type="decimal" value="200.00" />
+			</var>
+			<var name="payables" type="dao" value="com.efo.entity.Payables" />
+			<var name="inventory" type="dao" value="com.efo.entity.Inventory" >
+				<field name="sku" type="string" value="638609117647" />
+				<field name="amt_in_stock" type="decimal" value="10.0" />
+				<field name="min_amount" type="decimal" value="10.0" />
+			</var>
+		</variables>
+	</file>
+	<file name="orderdelivered.trans" >
+		<variables>
+			<var name="order" type="dao" value="com.efo.entity.ProductOrders" >
+				<field name="invoice_num" type="string" value="56432" /> 
+				<field name="order_date" type="date" value="2018-06-14" />
+				<field name="delivery_date" type="date" value="2018-06-17" />
+				<field name="payment_type" type="string" value="Credit" />
+				<field name="amt_ordered" type="decimal" value="10.00" />
+				<field name="amt_received" type="decimal" value="0.00" />
+				<field name="amt_this_shipment" type="decimal" value="10.00" />
+				<field name="sku" type="string" value="638609117647" />
+				<field name="vendor" type="string" value="San Miguel" />
+				<field name="wholesale" type="decimal" value="200.00" />
+			</var>
+		</variables>
+	</file>
+	<file name="ordercancelled.trans" >
+		<variables>
+			<var name="order" type="dao" value="com.efo.entity.ProductOrders" >
+				<field name="invoice_num" type="string" value="56432" /> 
+				<field name="order_date" type="date" value="2018-06-14" />
+				<field name="payment_type" type="string" value="Credit" />
+				<field name="amt_ordered" type="decimal" value="10.00" />
+				<field name="sku" type="string" value="638609117647" />
+				<field name="vendor" type="string" value="San Miguel" />
+				<field name="wholesale" type="decimal" value="200.00" />
+			</var>
+			<var name="payables" type="dao" value="com.efo.entity.Payables" />
+			<var name="inventory" type="dao" value="com.efo.entity.Inventory" >
+				<field name="sku" type="string" value="638609117647" />
+				<field name="amt_in_stock" type="decimal" value="10.0" />
+				<field name="min_amount" type="decimal" value="10.0" />
+			</var>
+		</variables>
+	</file>
+	<file name="calcpayment.trans">
+		<variables>
+			<var name="total" type="decimal" value="1000.0" />
+			<var name="down" type="decimal" value="100.0" />
+			<var name="interest" type="decimal" value="10.0" />
+			<var name="payments" type="decimal" value="12.0" />
+		</variables>
+	</file>
+	<file name="paymentmade.trans">
+		<variables>
+			<var name="payables" type="dao" value="com.efo.entity.Payables">
+				<field name="invoice_num" type="string" value="AZ15234" />
+				<field name="date_begin" type="date" value="2018-06-23" />
+				<field name="supplier" type="string" value="SR" />
+				<field name="type" type="string" value="R" />
+				<field name="total_due" type="decimal" value="1000.00" />
+				<field name="down_payment" type="decimal" value="100.00" />
+				<field name="interest" type="decimal" value="10.00" />
+				<field name="each_payment" type="decimal" value="82.50" />
+				<field name="num_payments" type="number" value="12" />
+				<field name="schedule" type="string" value="Monthly" />
+				<field name="total_balance" type="decimal" value="1000.00" />
+			</var>
+			<var name="billed" type="dao" value="com.efo.entity.PaymentsBilled">
+				<field name="invoice_num" type="string" value="AZ15234" />
+				<field name="payment_date" type="date" value="2018-07-23" />
+				<field name="date_due" type="date" value="2018-07-23" />
+				<field name="payment_due" type="decimal" value="82.5" />
+				<field name="payment" type="decimal" value="82.5" />
+				<field name="penalties" type="decimal" value="0.0" />
+			</var>
+			<var name="num_of_payments" type="decimal" value="12.0"/>
+		</variables>
+	</file>
+	<file name="depreciation.trans" >
+		<variables>
+			<var name="asset" type="dao" value="com.efo.entity.CapitalAssets">
+				<field name="date_purchased" type="date" value="2016-06-01" />
+				<field name="depreciation_method" type="string" value="Double Declining" />
+				<field name="item_cost" type="decimal" value="1000.00" />
+				<field name="salvage_value" type="decimal" value="100.00" />
+				<field name="lifetime" type="decimal" value="5.0" />
+			</var>
+		</variables>
+	</file>
+	<file name="purchasecapital.trans">
+		<variables>
+			<var name="asset" type="dao" value="com.efo.entity.CapitalAssets">
+				<field name="invoice_num" type="string" value="3269564572" />
+				<field name="purchase_type" type="string" value="Credit" />
+				<field name="item_cost" type="decimal" value="5000.00" />
+				<field name="date_purchased" type="date" value="2018-07-01" />
+				<field name="vendor" type="string" value="Kinkos" />
+			</var>
+			<var name="payables" type="dao" value="com.efo.entity.Payables">
+				<field name="down_payment" type="decimal" value="500.00" />
+				<field name="interest" type="decimal" value="10.00" />
+				<field name="each_payment" type="decimal" value="417.00" />
+				<field name="num_payments" type="number" value="12" />
+				<field name="schedule" type="string" value="Monthly" />
+			</var>
+			<var name="billed" type="dao" value="com.efo.entity.PaymentsBilled" />
+			<var name="sched" type="object" value="com.efo.component.ScheduleUtilities" />
+		</variables>
+	</file>
+	<file name="replenishpc.trans" >
+		<variables>
+			<var name="pettyCashCeiling" type="decimal" value="400.00" />
+		</variables>
+	</file>
+	<file name="testCommit.trans">
+		<variables>
+			<var name="testReceipt" type="object" value="com.efo.util.TestReceipt" />
 		</variables>
 	</file>
 </configs>

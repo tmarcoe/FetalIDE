@@ -138,11 +138,12 @@ public class ScriptSetupFile extends ClassLoader {
 	@SuppressWarnings("resource")
 	private Object load(String classname) throws Exception {
 		Object result;
-		String pathToClassFile = "C:\\Users\\Timothy Marcoe\\git\\SpringBootPeachy\\SpringBootPeachy\\target\\classes\\";
-
+		String pathToClassFile = "resources/classes/";
 		// Create class to hold the class to be loaded via a URL class loader
+		System.out.println("Classpath: " + pathToClassFile);
 		Class<?> clss = new URLClassLoader(new URL[] { new File(pathToClassFile).toURI().toURL() })
 				.loadClass(classname);
+		
 		// Class<?> clss = new URLClassLoader(new URL[] {url}).loadClass(classname);
 
 		result = clss.newInstance();

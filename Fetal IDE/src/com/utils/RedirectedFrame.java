@@ -68,7 +68,7 @@ public class RedirectedFrame extends JFrame {
 	   public void displayLog() {
 	      Dimension dim = getToolkit().getScreenSize();
 	      Rectangle abounds = getBounds();
-	      Dimension dd = getSize();
+
 	      setLocation((dim.width - abounds.width) / 2,
 	         (dim.height - abounds.height) / 2);
 	      setVisible(true);
@@ -82,7 +82,7 @@ public class RedirectedFrame extends JFrame {
 	      }
 	      catch (Exception e) {
 	         // for applet, always RedirectedFrame(false)
-	         RedirectedFrame r = new RedirectedFrame(true);
+	 
 	         e.printStackTrace();
 	      }
 	    }

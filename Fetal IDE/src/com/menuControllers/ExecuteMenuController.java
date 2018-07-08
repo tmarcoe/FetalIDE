@@ -90,6 +90,7 @@ public class ExecuteMenuController {
 	class RunApplication {
 
 		public void run(String editText, Semaphore semaphore) throws Exception {
+			
 			Properties prop = PropertiesFile.getProperties(propFile);
 			trans = new TransactionService();
 			ScriptSetupFile setup = new ScriptSetupFile();

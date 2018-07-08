@@ -18,13 +18,13 @@ public class SetupMenuController extends JFrame {
 	
 	private final String propFile = "resources/config/ide.properties";
 
-	private Properties prop = PropertiesFile.getProperties(propFile);
 	
 	public void preferncesMenu(SetupWindowView prefWindow) {
 		prefWindow.setupWindow();
 	}
 	
 	public void setWorkspace(SetupWindowView prefWindow) throws IOException {
+		Properties prop = PropertiesFile.getProperties(propFile);
 		JFileChooser fc = new JFileChooser();
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		int result = fc.showSaveDialog(prefWindow);
@@ -47,6 +47,7 @@ public class SetupMenuController extends JFrame {
 	}
 	
 	public void setupProps(SetupWindowView prefWindow) throws IOException {
+		Properties prop = PropertiesFile.getProperties(propFile);
 		JFileChooser fc = new JFileChooser();
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		int result = fc.showSaveDialog(prefWindow);
